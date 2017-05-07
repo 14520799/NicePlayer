@@ -151,9 +151,8 @@ namespace Player
                             {
                                 playlist.appendItem(wmp.newMedia(dirMedia[j]));
                             }
-
-                            // Nếu media[i] != media[0]
-                            if(i != 0)
+                            
+                            if(i != 0)  // Nếu media[i] != media[0]
                             {
                                 // Thêm các media đứng trước media[i] vào playlist
                                 for(int k = 0; k < i; k++)
