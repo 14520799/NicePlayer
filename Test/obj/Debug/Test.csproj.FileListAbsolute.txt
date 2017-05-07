@@ -1,0 +1,6 @@
+C:\Users\Admin\Favorites\Player\Test\bin\Debug\Test.exe.config
+C:\Users\Admin\Favorites\Player\Test\bin\Debug\Test.exe
+C:\Users\Admin\Favorites\Player\Test\bin\Debug\Test.pdb
+C:\Users\Admin\Favorites\Player\Test\obj\Debug\Test.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Favorites\Player\Test\obj\Debug\Test.exe
+C:\Users\Admin\Favorites\Player\Test\obj\Debug\Test.pdb
