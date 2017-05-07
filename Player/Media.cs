@@ -138,8 +138,7 @@ namespace Player
                     {
                         if(found)  // Nếu media[i] nằm trong Search Result
                         {
-                            playlist.appendItem(wmp.newMedia(dirMedia[i]));
-                            wmp.currentPlaylist = playlist;
+                            wmp.URL = dirMedia[i];
                             itemClicked = Path.GetFileName(dirMedia[i]);  // Lấy tên media được chọn => Hiển thị lên Now Playing khi ấn nút Listen
                             break;
                         }
