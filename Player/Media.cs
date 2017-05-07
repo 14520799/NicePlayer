@@ -128,16 +128,45 @@ namespace Player
         {
             if (type == "Now Playing")  // Xử lý click trái cho lvPlaying => Update dirMedia
             {
-                foreach (string item in dirMedia)  // dirMedia lưu đường dẫn các media đang phát
-                {
-                    if (Path.GetFileName(item) == listView.FocusedItem.Text)
-                    {
-                        wmp.URL = item;  // Phát media được chọn
-                        
-                        if (found)
-                            itemClicked = Path.GetFileName(item);  // Lấy tên media được chọn => Hiển thị lên Now Playing khi ấn nút Listen
+                // Tạo playlist mới
+                WMPLib.IWMPPlaylist playlist = wmp.newPlaylist(string.Empty, string.Empty);
 
-                        break;
+                for(int i = 0; i < dirMedia.Count; i++)
+                {
+                    // Nếu media được chọn = media[i]
+                    if(Path.GetFileName(dirMedia[i]) == listView.FocusedItem.Text)
+                    {
+                        if(found)  // Nếu media[i] nằm trong Search Result
+                        {
+                            playlist.appendItem(wmp.newMedia(dirMedia[i]));
+                            wmp.currentPlaylist = playlist;
+                            itemClicked = Path.GetFileName(dirMedia[i]);  // Lấy tên media được chọn => Hiển thị lên Now Playing khi ấn nút Listen
+                            break;
+                        }
+                        else  // Nếu media[i] nằm trong danh sách phát
+                        {
+                            playlist.appendItem(wmp.newMedia(dirMedia[i]));  // Thêm media[i] vào playlist
+                            
+                            // Thêm các media đứng sau media[i] vào playlist
+                            for(int j = i + 1; j < dirMedia.Count; j++)
+                            {
+                                playlist.appendItem(wmp.newMedia(dirMedia[j]));
+                            }
+
+                            // Nếu media[i] != media[0]
+                            if(i != 0)
+                            {
+                                // Thêm các media đứng trước media[i] vào playlist
+                                for(int k = 0; k < i; k++)
+                                {
+                                    playlist.appendItem(wmp.newMedia(dirMedia[k]));
+                                }
+                            }
+
+                            wmp.currentPlaylist = playlist;
+                            wmp.settings.setMode("loop", true);
+                            break;
+                        }
                     }
                 }
             }
