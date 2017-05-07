@@ -518,6 +518,8 @@ namespace Player
                 {
                     lvPlaying.Clear();
                     gbPlaying.Text = "Now Playing";
+                    rtbLyric.Visible = false;
+                    rtbLyric.Text = "Please wait a moment ...";
                     playlist.clear();
                     dirMedia.Clear();
 
