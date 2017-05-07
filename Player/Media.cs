@@ -30,7 +30,7 @@ namespace Player
         List<string> dirLocation = new List<string>();  // Lưu danh sách đường dẫn các thư mục chứa media
 
         bool found = false;  // Kết quả tìm kiếm media
-        string itemClicked = string.Empty;  // Tên media được click trong Search Result
+        string itemClicked = string.Empty;  // Lấy tên media được click trong Search Result
 
 
         // Hiệu ứng zoom-in cho các Button
