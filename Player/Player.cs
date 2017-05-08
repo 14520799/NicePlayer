@@ -26,8 +26,8 @@ namespace Player
         
         Media obj = new Media();
 
-        bool shuffle = false;
-        bool repeat = false;
+        //bool shuffle = false;
+        //bool repeat = false;
 
         
         public Player()
@@ -55,7 +55,7 @@ namespace Player
             pPower.Dock = DockStyle.Fill;
 
 
-            // Nút Shuffle
+            /*// Nút Shuffle
             PictureBox pbShuffle = new PictureBox();
             wmp.Controls.Add(pbShuffle);
             pbShuffle.Location = new Point(479, 379);
@@ -132,13 +132,13 @@ namespace Player
                     wmp.settings.setMode("loop", false);
                     repeat = false;
                 }
-            };
+            };*/
 
             
             // Nút Return
             PictureBox pbReturn = new PictureBox();
             wmp.Controls.Add(pbReturn);
-            pbReturn.Location = new Point(535, 379);
+            pbReturn.Location = new Point(537, 379);
             pbReturn.Size = new Size(30, 30);
             pbReturn.SizeMode = PictureBoxSizeMode.CenterImage;
             pbReturn.BackColor = Color.Transparent;

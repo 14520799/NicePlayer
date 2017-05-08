@@ -151,18 +151,8 @@ namespace Player
                             {
                                 playlist.appendItem(wmp.newMedia(dirMedia[j]));
                             }
-                            
-                            if(i != 0)  // Nếu media[i] != media[0]
-                            {
-                                // Thêm các media đứng trước media[i] vào playlist
-                                for(int k = 0; k < i; k++)
-                                {
-                                    playlist.appendItem(wmp.newMedia(dirMedia[k]));
-                                }
-                            }
 
                             wmp.currentPlaylist = playlist;
-                            wmp.settings.setMode("loop", true);
                             break;
                         }
                     }
@@ -1433,22 +1423,44 @@ namespace Player
                 
                 time--;
 
+                // Nhắc nhở trước 5 phút
+                if(time - 300 == -1)
+                {
+                    DialogResult dialog = MessageBox.Show("Your PC will turn off after 5 minutes\nAre you sure ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    timer.Stop();
+
+                    if (dialog == DialogResult.Yes)
+                    {
+                        MessageBox.Show("Your PC will turn off after 5 minutes\nFinish your works !", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        timer.Start();
+                    } 
+                    else
+                    {
+                        lblRemain.Text = "Canceled !";
+                        timer.Stop();
+                    }
+                }
+
+                // Hết giờ
                 if (time < 0)
                 {
-                    timer.Stop();
                     lblRemain.Text = "Timed out !";
+                    timer.Stop();
 
                     switch (type)
                     {
                         case "Close":
                             form.Close();
                             break;
-                        /*case "Sleep":
+                        case "Sleep":
                             Application.SetSuspendState(PowerState.Suspend, true, true);
                             break;
                         case "Shutdown":
-                            ExitWindowsEx(1, 0);
-                            break;*/
+                            ProcessStartInfo shutdown = new ProcessStartInfo("shutdown", "-s -f -t 0");
+                            shutdown.CreateNoWindow = true;
+                            shutdown.UseShellExecute = false;
+                            Process.Start(shutdown);
+                            break;
                         default:
                             break;
                     }
@@ -1510,11 +1522,6 @@ namespace Player
             {
                 pPower.SendToBack();
             };
-
-
-            // Chưa hoàn thiện ----------------------------------------------------------
-            btnSleep.Enabled = false;
-            btnShutdown.Enabled = false;
         }
     }
 }
