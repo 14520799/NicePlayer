@@ -1423,17 +1423,13 @@ namespace Player
                 
                 time--;
 
-                // Nhắc nhở trước 5 phút
-                if(time - 300 == -1)
+                // Nhắc nhở shutdown sau 5 phút
+                if(time - 300 == -1 && type == "Shutdown")
                 {
                     DialogResult dialog = MessageBox.Show("Your PC will turn off after 5 minutes\nAre you sure ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    timer.Stop();
-
+                    
                     if (dialog == DialogResult.Yes)
-                    {
                         MessageBox.Show("Your PC will turn off after 5 minutes\nFinish your works !", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        timer.Start();
-                    } 
                     else
                     {
                         lblRemain.Text = "Canceled !";
