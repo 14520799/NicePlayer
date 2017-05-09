@@ -1432,7 +1432,7 @@ namespace Player
                 
                 time--;
 
-                // Nhắc nhở shutdown sau 5 phút
+                // Nhắc nhở shutdown trước 5 phút
                 if(time - 300 == -1 && type == "Shutdown")
                 {
                     DialogResult dialog = MessageBox.Show("Your PC will turn off after 5 minutes\nAre you sure ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -1445,7 +1445,7 @@ namespace Player
                         timer.Stop();
                     }
 
-                    // Nếu không chọn Yes/No => PC sẽ tắt sau 5 phút
+                    // Nếu không chọn Yes/No => PC sẽ shutdown sau 5 phút
                 }
 
                 // Hết giờ

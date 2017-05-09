@@ -23,6 +23,7 @@ C:\Users\Admin\Source\Repos\phanhoangtam\Player\bin\Debug\HtmlAgilityPack.pdb
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\bin\Debug\HtmlAgilityPack.xml
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\bin\Debug\Interop.WMPLib.dll
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\bin\Debug\AxInterop.WMPLib.dll
+C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Interop.WMPLib.dll
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\AxInterop.WMPLib.dll
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.csproj.ResolveComReference.cache
@@ -32,4 +33,3 @@ C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.Properties.Reso
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.csproj.GenerateResource.Cache
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.exe
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.pdb
-C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache
