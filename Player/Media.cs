@@ -254,6 +254,16 @@ namespace Player
                 // Xóa media khỏi 1 playlist
                 iDelete.Click += (sender, args) =>
                 {
+                    // Xóa đường dẫn của media cần xóa khỏi dirMedia
+                    foreach (string item in dirMedia)
+                    {
+                        if (Path.GetFileName(item) == listView.FocusedItem.Text)
+                        {
+                            dirMedia.Remove(item);
+                            break;
+                        }
+                    }
+
                     File.Delete(@"Playlist\" + dirPlaylist + ".txt");  // Xóa file .txt của playlist chứa media cần xóa
 
                     try
@@ -264,8 +274,7 @@ namespace Player
 
                         foreach (string item in dirMedia)
                         {
-                            if (Path.GetFileName(item) != listView.FocusedItem.Text)
-                                writer.WriteLine(item);  // Ghi các đường dẫn media cũ ngoại trừ media cần xóa
+                            writer.WriteLine(item);  // Ghi các đường dẫn media đã update
                         }
 
                         writer.Close();
@@ -1435,6 +1444,8 @@ namespace Player
                         lblRemain.Text = "Canceled !";
                         timer.Stop();
                     }
+
+                    // Nếu không chọn Yes/No => PC sẽ tắt sau 5 phút
                 }
 
                 // Hết giờ
