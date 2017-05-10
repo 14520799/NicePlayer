@@ -69,13 +69,11 @@ namespace Player
 
             try
             {
-                foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a[@href]"))
+                foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a"))
                 {
-                    HtmlAttribute att = node.Attributes["href"];
-
-                    if (att.Value.Length == (index.Length + 12) && att.Value.Contains(index))
+                    if (node.Attributes["href"].Value.Length == (index.Length + 12) && node.Attributes["href"].Value.Contains(index))
                     {
-                        link = att.Value;
+                        link = node.Attributes["href"].Value;
                         break;
                     }
                 }
