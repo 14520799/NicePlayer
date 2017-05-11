@@ -69,7 +69,7 @@ namespace Player
 
             try
             {
-                foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a"))
+                foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a[@href]"))
                 {
                     if (node.Attributes["href"].Value.Length == (index.Length + 12) && node.Attributes["href"].Value.Contains(index))
                     {
