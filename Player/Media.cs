@@ -32,10 +32,15 @@ namespace Player
         bool found = false;  // Kết quả tìm kiếm media
         string itemClicked = string.Empty;  // Lấy tên media được click trong Search Result
 
+        ToolTip tip = new ToolTip();
+
 
         // Hiệu ứng zoom-in cho các Button
-        public void mouseHover(Image image, PictureBox box)
+        public void mouseHover(Image image, PictureBox box, string message)
         {
+            tip = new ToolTip();
+            tip.Show(message, box);
+
             int width = image.Width + 10;
             int height = image.Height + 10;
             Bitmap bmp = new Bitmap(width, height);
@@ -48,6 +53,7 @@ namespace Player
         // Hiệu ứng zoom-out cho các Button
         public void mouseLeave(Image image, PictureBox box)
         {
+            tip.RemoveAll();
             box.Image = image;
         }
 
@@ -458,7 +464,7 @@ namespace Player
             // Zoom-in
             pbBack.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Back, pbBack);
+                mouseHover(Resources.Back, pbBack, "Back");
             };
 
             // Zoom-out
@@ -492,7 +498,7 @@ namespace Player
             // Zoom-in
             pbPlayer.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Player, pbPlayer);
+                mouseHover(Resources.Player, pbPlayer, "Player");
             };
             
             // Zoom-out
@@ -520,7 +526,7 @@ namespace Player
             // Zoom-in
             pbOpen.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Open, pbOpen);
+                mouseHover(Resources.Open, pbOpen, "Open your music !");
             };
 
             // Zoom-out
@@ -570,7 +576,7 @@ namespace Player
             // Zoom-in
             pbHome.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Home, pbHome);
+                mouseHover(Resources.Home, pbHome, "Home");
             };
 
             // Zoom-out
@@ -705,7 +711,7 @@ namespace Player
             // Zoom-in
             pbBack.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Back, pbBack);
+                mouseHover(Resources.Back, pbBack, "Back");
             };
 
             // Zoom-out
@@ -739,7 +745,7 @@ namespace Player
             // Zoom-in
             pbPlayer.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Player, pbPlayer);
+                mouseHover(Resources.Player, pbPlayer, "Player");
             };
 
             // Zoom-out
@@ -767,7 +773,7 @@ namespace Player
             // Zoom-in
             pbNewPlaylist.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.NewPlaylist, pbNewPlaylist);
+                mouseHover(Resources.NewPlaylist, pbNewPlaylist, "New Playlist");
             };
 
             // Zoom-out
@@ -832,7 +838,7 @@ namespace Player
             // Zoom-in
             pbHome.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Home, pbHome);
+                mouseHover(Resources.Home, pbHome, "Home");
             };
 
             // Zoom-out
@@ -1036,7 +1042,7 @@ namespace Player
             // Zoom-in
             pbBack.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Back, pbBack);
+                mouseHover(Resources.Back, pbBack, "Back");
             };
 
             // Zoom-out
@@ -1076,7 +1082,7 @@ namespace Player
             // Zoom-in
             pbPlayer.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Player, pbPlayer);
+                mouseHover(Resources.Player, pbPlayer, "Player");
             };
 
             // Zoom-out
@@ -1104,7 +1110,7 @@ namespace Player
             // Zoom-in
             pbLocation.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Location, pbLocation);
+                mouseHover(Resources.Location, pbLocation, "Choose where we look for music !");
             };
 
             // Zoom-out
@@ -1180,7 +1186,7 @@ namespace Player
             // Zoom-in
             pbHome.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Home, pbHome);
+                mouseHover(Resources.Home, pbHome, "Home");
             };
 
             // Zoom-out
@@ -1483,7 +1489,7 @@ namespace Player
             // Zoom-in
             pbPlayer.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Player, pbPlayer);
+                mouseHover(Resources.Player, pbPlayer, "Player");
             };
 
             // Zoom-out
@@ -1511,7 +1517,7 @@ namespace Player
             // Zoom-in
             pbHome.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Home, pbHome);
+                mouseHover(Resources.Home, pbHome, "Home");
             };
 
             // Zoom-out

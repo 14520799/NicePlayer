@@ -29,7 +29,7 @@ namespace Player
         //bool shuffle = false;
         //bool repeat = false;
 
-        
+
         public Player()
         {
             this.DoubleBuffered = true;
@@ -54,7 +54,7 @@ namespace Player
             this.Controls.Add(pPower);
             pPower.Dock = DockStyle.Fill;
 
-
+            
             /*// Nút Shuffle
             PictureBox pbShuffle = new PictureBox();
             wmp.Controls.Add(pbShuffle);
@@ -147,12 +147,13 @@ namespace Player
             // Zoom-in
             pbReturn.MouseHover += (sender, args) =>
             {
-                obj.mouseHover(Resources.Return, pbReturn);
+                obj.mouseHover(Resources.Return, pbReturn, "Return");
             };
 
             // Zoom-out
             pbReturn.MouseLeave += (sender, args) =>
             {
+                
                 obj.mouseLeave(Resources.Return, pbReturn);
             };
 
@@ -177,33 +178,33 @@ namespace Player
             {
                 File.Create(@"Location.txt");
             }
-
+            
             wmp.settings.volume = 100;
         }
 
-
+        
         // Zoom-in 4 nút Listen, Playlist, Search, Power
         private void pbListen_MouseHover(object sender, EventArgs e)
         {
-            obj.mouseHover(Resources.Listen, pbListen);
+            obj.mouseHover(Resources.Listen, pbListen, "Listen");
         }
 
 
         private void pbPlaylist_MouseHover(object sender, EventArgs e)
         {
-            obj.mouseHover(Resources.Playlist, pbPlaylist);
+            obj.mouseHover(Resources.Playlist, pbPlaylist, "Playlist");
         }
 
 
         private void pbSearch_MouseHover(object sender, EventArgs e)
         {
-            obj.mouseHover(Resources.Search, pbSearch);
+            obj.mouseHover(Resources.Search, pbSearch, "Search");
         }
 
         
         private void pbPower_MouseHover(object sender, EventArgs e)
         {
-            obj.mouseHover(Resources.Power, pbPower);
+            obj.mouseHover(Resources.Power, pbPower, "Power");
         }
 
 
