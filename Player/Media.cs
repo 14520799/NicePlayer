@@ -264,7 +264,7 @@ namespace Player
                     File.Delete(@"Playlist\" + dirPlaylist + ".txt");  // Xóa file .txt của playlist chứa media cần xóa
 
                     try
-                    {   
+                    {
                         // Tạo mới file .txt của playlist chứa media cần xóa
                         FileStream stream = new FileStream(@"Playlist\" + dirPlaylist + ".txt", FileMode.CreateNew);
                         StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
