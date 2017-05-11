@@ -88,7 +88,7 @@ namespace Player
             try
             {
                 string HTML = doc.DocumentNode.InnerHtml;
-                HTML = regex.Replace(HTML, "@@");  // @@ thay cho chuỗi rác
+                HTML = regex.Replace(HTML, "\n");
                 doc.LoadHtml(HTML);
             }
             catch
@@ -106,9 +106,8 @@ namespace Player
             {
                 lyric = "Invalid Title or Network Error !";
             }
-
-            // Dùng \n@@ để phân biệt với \n\n => Xóa newline dư thừa
-            return lyric.Replace("\n@@", string.Empty).Replace("@@", string.Empty);
+            
+            return lyric.Replace("\n\n\n\n", "\n").Replace("\n\n\n", "\n");
         }
 
 
