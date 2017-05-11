@@ -52,26 +52,16 @@ namespace Player
         }
 
 
-        // Chuyển đổi tiếng Việt sang không dấu => Dùng cho tìm kiếm media + lyric
-        public string convertText(string text)
-        {
-            Regex regex = new Regex("\\p{IsCombiningDiacriticalMarks}+");
-            return regex.Replace(text.Normalize(NormalizationForm.FormD), String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
-        }
-
-
         // Trả về link bài hát dựa vào tên bài hát
         public string getLink(HtmlAgilityPack.HtmlDocument doc, ListView listView)
         {
             string link = string.Empty;
-            string index = listView.FocusedItem.Text.Substring(0, listView.FocusedItem.Text.Length - 4);
-            index = convertText(index).ToLower().Trim().Replace("  ", " ").Replace(" ", "_");
 
             try
             {
                 foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a[@href]"))
                 {
-                    if (node.Attributes["href"].Value.Length == (index.Length + 12) && node.Attributes["href"].Value.Contains(index))
+                    if (node.Attributes["href"].Value.StartsWith("http://m1"))
                     {
                         link = node.Attributes["href"].Value;
                         break;
@@ -91,33 +81,42 @@ namespace Player
         public string getLyric(HtmlAgilityPack.HtmlDocument doc)
         {
             string lyric = string.Empty;
-            string[] pattern = new string[] { @"<br>", @"          " };
-            Regex regex = new Regex(string.Join("|", pattern), RegexOptions.IgnoreCase);
+            string[] pattern = new string[] { @"<span[^>]*>[\s\S]*?</span>", @"&quot;" };
+            Regex regex = new Regex(string.Join("|", pattern));
 
             // Load và chỉnh sửa HTML 
             try
             {
                 string HTML = doc.DocumentNode.InnerHtml;
-                HTML = regex.Replace(HTML, "\n");
+                HTML = regex.Replace(HTML, "@@");  // @@ thay cho chuỗi rác
                 doc.LoadHtml(HTML);
             }
             catch
             {
 
             }
-            
-            // Lấy lyric của media từ HTML
+
+            // Lấy lyric của media từ HTML đã chỉnh sửa
             try
             {
-                HtmlNode node = doc.DocumentNode.SelectSingleNode("//div[@class='div-content-lyric']");
+                HtmlNode node = doc.DocumentNode.SelectSingleNode("//p[@class='genmed']");
                 lyric = node.InnerText;
             }
             catch
             {
-                lyric = "\n\nInvalid Title or Network Error !";
+                lyric = "Invalid Title or Network Error !";
             }
 
-            return lyric;
+            // Dùng \n@@ để phân biệt với \n\n => Xóa newline dư thừa
+            return lyric.Replace("\n@@", string.Empty).Replace("@@", string.Empty);
+        }
+
+
+        // Chuyển đổi tiếng Việt sang không dấu => Dùng cho tìm kiếm media
+        public string convertText(string text)
+        {
+            Regex regex = new Regex("\\p{IsCombiningDiacriticalMarks}+");
+            return regex.Replace(text.Normalize(NormalizationForm.FormD), String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
         }
 
 
@@ -220,7 +219,7 @@ namespace Player
                 {
                     rtbLyric.Visible = true;
                     string index = listView.FocusedItem.Text.Substring(0, listView.FocusedItem.Text.Length - 4);
-                    index = convertText(index).ToLower().Trim().Replace("  ", " ").Replace(" ", "-");
+                    index.Replace("-", " ").Replace(" ", "+");
 
                     HtmlWeb web = new HtmlWeb();
                     HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
@@ -228,7 +227,7 @@ namespace Player
                     // Load HTML chứa các link phù hợp với tên media
                     try
                     {
-                        doc = web.Load("http://lyric.tkaraoke.com/s.tim?q=" + index + "&t=11");
+                        doc = web.Load("http://search.chiasenhac.vn/search.php?s=" + index);
                     }
                     catch
                     {
@@ -238,14 +237,14 @@ namespace Player
                     // Load HTML của 1 link phù hợp với tên media nhất 
                     try
                     {
-                        doc = web.Load("http://lyric.tkaraoke.com/" + getLink(doc, listView));
+                        doc = web.Load(getLink(doc, listView));
                     }
                     catch
                     {
 
                     }
                     
-                    rtbLyric.Text = listView.FocusedItem.Text.Substring(0, listView.FocusedItem.Text.Length - 4).ToUpper() + getLyric(doc);
+                    rtbLyric.Text = listView.FocusedItem.Text.Substring(0, listView.FocusedItem.Text.Length - 4).ToUpper() + "\n\n" + getLyric(doc) + "\n";
                 };
 
 
