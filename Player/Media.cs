@@ -971,7 +971,7 @@ namespace Player
                     foreach (string item in dirMedia)
                     {   
                         // Kiểm tra từ khóa tìm kiếm hợp lệ hay không
-                        if (txtSearch.Text.Trim() != string.Empty && convertText(Path.GetFileNameWithoutExtension(item)).ToLower().Trim().Replace("  ", " ").Contains(convertText(txtSearch.Text).ToLower().Trim().Replace("  ", " ")))
+                        if (txtSearch.Text.Trim() != string.Empty && convertText(Path.GetFileNameWithoutExtension(item)).ToLower().Trim().Replace("-", " ").Replace("  ", " ").Contains(convertText(txtSearch.Text).ToLower().Trim().Replace("  ", " ")))
                         {
                             lvSearch.Items.Add(Path.GetFileName(item));
                             found = true;
