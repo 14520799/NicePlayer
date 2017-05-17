@@ -790,7 +790,7 @@ namespace Player
             // Icon tìm kiếm
             PictureBox btnSearch = new PictureBox();
             pKaraoke.Controls.Add(btnSearch);
-            btnSearch.Location = new Point(325, 21);
+            btnSearch.Location = new Point(324, 21);
             btnSearch.Size = new Size(28, 28);
             btnSearch.BackColor = Color.Transparent;
             btnSearch.Image = Resources.SearchButton;
@@ -1397,7 +1397,7 @@ namespace Player
             // Icon tìm kiếm
             PictureBox btnSearch = new PictureBox();
             pSearch.Controls.Add(btnSearch);
-            btnSearch.Location = new Point(325, 21);
+            btnSearch.Location = new Point(324, 21);
             btnSearch.Size = new Size(28, 28);
             btnSearch.BackColor = Color.Transparent;
             btnSearch.Image = Resources.SearchButton;
