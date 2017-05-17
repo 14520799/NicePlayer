@@ -251,18 +251,19 @@ namespace Player
             // Khai báo 1 ContextMenuStrip + 3 ToolStripItem tùy chọn cho từng loại ListView
             ContextMenuStrip context = new ContextMenuStrip();
             listView.ContextMenuStrip = context;
-
+            
             ToolStripMenuItem iLyric = new ToolStripMenuItem("Lyric");
             ToolStripMenuItem iDelete = new ToolStripMenuItem("Delete");
             ToolStripMenuItem iAddTo = new ToolStripMenuItem("Add To");
             ToolStripMenuItem iProperty = new ToolStripMenuItem("Property");
             ToolStripMenuItem iRename = new ToolStripMenuItem("Rename");
-
+            
             
             if (type == "Now Playing")  // Xử lý click phải cho lvPlaying
             {
                 try
                 {
+                    // Thêm tất cả tên playlist vào iAddTo
                     foreach (string item in Directory.GetFiles(@"Playlist", "*.txt"))
                     {
                         iAddTo.DropDownItems.Add(new ToolStripMenuItem(Path.GetFileNameWithoutExtension(item)));
@@ -272,7 +273,7 @@ namespace Player
                 {
 
                 }
-
+                
 
                 // Thêm 3 ToolStripItem : Lyric, Delete, Property
                 context.Items.AddRange(new ToolStripItem[] { iLyric, iDelete, iAddTo, iProperty });
@@ -436,7 +437,6 @@ namespace Player
 
                     listView.AfterLabelEdit += (obj, evt) =>
                     {
-                        //MessageBox.Show(evt.Item + "\n" + listView.FocusedItem.Text);
                         if (evt.Label != string.Empty && evt.Label != listView.FocusedItem.Text && !Directory.GetFiles(@"Playlist", "*.txt").Contains(@"Playlist\" + evt.Label + ".txt"))
                         {
                             List<string> temp = new List<string>();
@@ -545,7 +545,7 @@ namespace Player
             pListen.Controls.Add(gbPlaying);
             gbPlaying.Location = new Point(0, 12);
             gbPlaying.Size = new Size(454, 397);
-            gbPlaying.ForeColor = Color.Lime;
+            gbPlaying.ForeColor = Color.DeepSkyBlue;
             gbPlaying.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbPlaying.Text = "My Music";
             
@@ -664,7 +664,7 @@ namespace Player
             // Nút Player
             PictureBox pbPlayer = new PictureBox();
             pListen.Controls.Add(pbPlayer);
-            pbPlayer.Location = new Point(475, 115);
+            pbPlayer.Location = new Point(475, 112);
             pbPlayer.Size = new Size(85, 85);
             pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
@@ -692,7 +692,7 @@ namespace Player
             // Nút Open
             PictureBox pbOpen = new PictureBox();
             pListen.Controls.Add(pbOpen);
-            pbOpen.Location = new Point(468, 213);
+            pbOpen.Location = new Point(465, 212);
             pbOpen.Size = new Size(85, 85);
             pbOpen.SizeMode = PictureBoxSizeMode.CenterImage;
             pbOpen.BackColor = Color.Transparent;
@@ -800,8 +800,8 @@ namespace Player
             pKaraoke.Controls.Add(gbKaraoke);
             gbKaraoke.Location = new Point(0, 60);
             gbKaraoke.Size = new Size(454, 349);
-            gbKaraoke.ForeColor = Color.Lime;
-            gbKaraoke.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbKaraoke.ForeColor = Color.DeepSkyBlue;
+            gbKaraoke.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbKaraoke.Text = status;
 
             AxShockwaveFlashObjects.AxShockwaveFlash flash = new AxShockwaveFlashObjects.AxShockwaveFlash();
@@ -1117,8 +1117,8 @@ namespace Player
             pPlaylist.Controls.Add(gbPlaylist);
             gbPlaylist.Location = new Point(0, 12);
             gbPlaylist.Size = new Size(160, 397);
-            gbPlaylist.ForeColor = Color.Lime;
-            gbPlaylist.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbPlaylist.ForeColor = Color.DeepSkyBlue;
+            gbPlaylist.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbPlaylist.Text = "Playlist";
 
             ListView lvPlaylist = new ListView();
@@ -1128,7 +1128,7 @@ namespace Player
             lvPlaylist.MultiSelect = false;
             lvPlaylist.BorderStyle = BorderStyle.None;
             lvPlaylist.BackColor = Color.Black;
-            lvPlaylist.ForeColor = Color.DeepSkyBlue;
+            lvPlaylist.ForeColor = Color.Lime;
             lvPlaylist.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
 
             // Khung chứa danh sách các media đang phát
@@ -1136,8 +1136,8 @@ namespace Player
             pPlaylist.Controls.Add(gbPlaying);
             gbPlaying.Location = new Point(159, 12);
             gbPlaying.Size = new Size(295, 397);
-            gbPlaying.ForeColor = Color.Lime;
-            gbPlaying.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbPlaying.ForeColor = Color.DeepSkyBlue;
+            gbPlaying.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbPlaying.Text = "Your Music";
 
             RichTextBox rtbLyric = new RichTextBox();
@@ -1283,7 +1283,7 @@ namespace Player
             // Nút NewPlaylist
             PictureBox pbNewPlaylist = new PictureBox();
             pPlaylist.Controls.Add(pbNewPlaylist);
-            pbNewPlaylist.Location = new Point(467, 214);
+            pbNewPlaylist.Location = new Point(467, 215);
             pbNewPlaylist.Size = new Size(85, 85);
             pbNewPlaylist.SizeMode = PictureBoxSizeMode.CenterImage;
             pbNewPlaylist.BackColor = Color.Transparent;
@@ -1407,8 +1407,8 @@ namespace Player
             pSearch.Controls.Add(gbLocation);
             gbLocation.Location = new Point(0, 62);
             gbLocation.Size = new Size(160, 347);
-            gbLocation.ForeColor = Color.Lime;
-            gbLocation.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbLocation.ForeColor = Color.DeepSkyBlue;
+            gbLocation.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbLocation.Text = "Music Folder";
 
             ListView lvLocation = new ListView();
@@ -1418,7 +1418,7 @@ namespace Player
             lvLocation.MultiSelect = false;
             lvLocation.BorderStyle = BorderStyle.None;
             lvLocation.BackColor = Color.Black;
-            lvLocation.ForeColor = Color.DeepSkyBlue;
+            lvLocation.ForeColor = Color.Lime;
             lvLocation.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             
             // Khung hiển thị kết quả tìm kiếm
@@ -1426,8 +1426,8 @@ namespace Player
             pSearch.Controls.Add(gbSearch);
             gbSearch.Location = new Point(159, 62);
             gbSearch.Size = new Size(296, 347);
-            gbSearch.ForeColor = Color.Lime;
-            gbSearch.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbSearch.ForeColor = Color.DeepSkyBlue;
+            gbSearch.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbSearch.Text = "Search Result";
 
             RichTextBox rtbLyric = new RichTextBox();
@@ -1752,7 +1752,7 @@ namespace Player
             gbTimer.Location = new Point(0, 12);
             gbTimer.Size = new Size(455, 397);
             gbTimer.ForeColor = Color.Lime;
-            gbTimer.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbTimer.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbTimer.Text = "Music Timer";
 
             // Label chủ đề

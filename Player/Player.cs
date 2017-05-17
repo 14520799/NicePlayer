@@ -41,6 +41,7 @@ namespace Player
             this.Controls.Add(wmp);
             wmp.Dock = DockStyle.Fill;
             
+            
             // Nút Return
             PictureBox pbReturn = new PictureBox();
             wmp.Controls.Add(pbReturn);

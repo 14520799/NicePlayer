@@ -154,12 +154,6 @@
     <None Include="Resources\SearchButton.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Repeat.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Shuffle.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\PlayingWall.jpg" />
   </ItemGroup>
   <ItemGroup>
