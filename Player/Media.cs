@@ -27,12 +27,16 @@ namespace Player
 
         string dirPlaylist = string.Empty;  // Lưu tên playlist đang phát
         List<string> dirMedia = new List<string>();  // Lưu danh sách đường dẫn các media đang phát
+        List<string> urlYouTube = new List<string>();  // Lưu danh sách URL từ YouTube dựa vào keyword (Dùng cho Karaoke)
         List<string> dirLocation = new List<string>();  // Lưu danh sách đường dẫn các thư mục chứa media
-
+        
         bool found = false;  // Kết quả tìm kiếm media
         string itemClicked = string.Empty;  // Lấy tên media được click trong Search Result
-
+        
         ToolTip tip = new ToolTip();
+
+
+/***************************************************************************************/
 
 
         // Hiệu ứng zoom-in cho các Button
@@ -41,13 +45,16 @@ namespace Player
             tip = new ToolTip();
             tip.Show(message, box);
 
-            int width = image.Width + 10;
-            int height = image.Height + 10;
+            int width = image.Width + 5;
+            int height = image.Height + 5;
             Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
             g.DrawImage(image, new Rectangle(Point.Empty, bmp.Size));
             box.Image = bmp;
         }
+
+
+/***************************************************************************************/
 
 
         // Hiệu ứng zoom-out cho các Button
@@ -56,6 +63,9 @@ namespace Player
             tip.RemoveAll();
             box.Image = image;
         }
+
+
+/***************************************************************************************/
 
 
         // Trả về link bài hát dựa vào tên bài hát
@@ -81,6 +91,9 @@ namespace Player
 
             return link;
         }
+
+
+/***************************************************************************************/
 
 
         // Trả về lyric dựa vào link đã có
@@ -110,11 +123,14 @@ namespace Player
             }
             catch
             {
-                lyric = "Invalid Title or Network Error !";
+                lyric = "502 Bad Gateway";
             }
             
             return lyric.Replace("\n\n\n\n", "\n").Replace("\n\n\n", "\n");
         }
+
+
+/***************************************************************************************/
 
 
         // Chuyển đổi tiếng Việt sang không dấu => Dùng cho tìm kiếm media
@@ -123,6 +139,36 @@ namespace Player
             Regex regex = new Regex("\\p{IsCombiningDiacriticalMarks}+");
             return regex.Replace(text.Normalize(NormalizationForm.FormD), String.Empty).Replace('\u0111', 'd').Replace('\u0110', 'D');
         }
+
+
+/***************************************************************************************/
+
+
+        // Lấy Title + URL từ YouTube
+        public void getURL(ListView listView, HtmlAgilityPack.HtmlDocument doc)
+        {
+            listView.Clear();
+            urlYouTube.Clear();
+
+            try
+            {
+                foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//a[@title]"))
+                {
+                    if (node.Attributes["href"].Value.StartsWith("/watch?v=") && !node.Attributes["href"].Value.StartsWith("/channel") && !node.Attributes["href"].Value.Contains("list") && node.Attributes["title"].Value.ToLower().Contains("karaoke"))
+                    {
+                        listView.Items.Add(node.Attributes["title"].Value.Replace("amp;", string.Empty));
+                        urlYouTube.Add("https://www.youtube.com" + node.Attributes["href"].Value.Replace("watch?v=", "v/"));
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+
+/***************************************************************************************/
 
 
         // Xử lý click trái cho lvPlaying, lvPlaylist, lvLocation
@@ -195,22 +241,42 @@ namespace Player
             }
         }
 
-        
+
+/***************************************************************************************/
+
+
         // Xử lý click phải cho lvPlaying, lvPlaylist, lvLocation
         public void rightClick(ListView listView, RichTextBox rtbLyric, string type)
         {
             // Khai báo 1 ContextMenuStrip + 3 ToolStripItem tùy chọn cho từng loại ListView
             ContextMenuStrip context = new ContextMenuStrip();
-            ToolStripItem iLyric = new ToolStripMenuItem("Lyric");
-            ToolStripItem iDelete = new ToolStripMenuItem("Delete");
-            ToolStripItem iProperty = new ToolStripMenuItem("Property");
-
             listView.ContextMenuStrip = context;
 
+            ToolStripMenuItem iLyric = new ToolStripMenuItem("Lyric");
+            ToolStripMenuItem iDelete = new ToolStripMenuItem("Delete");
+            ToolStripMenuItem iAddTo = new ToolStripMenuItem("Add To");
+            ToolStripMenuItem iProperty = new ToolStripMenuItem("Property");
+            ToolStripMenuItem iRename = new ToolStripMenuItem("Rename");
+
+            
             if (type == "Now Playing")  // Xử lý click phải cho lvPlaying
-            {   
+            {
+                try
+                {
+                    foreach (string item in Directory.GetFiles(@"Playlist", "*.txt"))
+                    {
+                        iAddTo.DropDownItems.Add(new ToolStripMenuItem(Path.GetFileNameWithoutExtension(item)));
+                    }
+                }
+                catch
+                {
+
+                }
+
+
                 // Thêm 3 ToolStripItem : Lyric, Delete, Property
-                context.Items.AddRange(new ToolStripItem[] { iLyric, iDelete, iProperty });
+                context.Items.AddRange(new ToolStripItem[] { iLyric, iDelete, iAddTo, iProperty });
+
 
                 // Chỉ hiển thị ContextMenuStrip khi listView.SelectedItems.Count != 0
                 context.Opening += (sender, args) =>
@@ -236,7 +302,7 @@ namespace Player
                     }
                     catch
                     {
-                        MessageBox.Show("There is no Internet connection", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("502 Bad Gateway", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     // Load HTML của 1 link phù hợp với tên media nhất 
@@ -291,6 +357,54 @@ namespace Player
                 };
 
 
+                // Thêm media vào 1 playlist khác
+                iAddTo.DropDownItemClicked += (sender, args) =>
+                {
+                    context.Hide();
+                    bool available = false;  // Playlist chưa tồn tại media cần thêm
+
+                    try
+                    {
+                        string line = string.Empty;
+                        FileStream stream = new FileStream(@"Playlist\" + args.ClickedItem.Text + ".txt", FileMode.Open);
+                        StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+
+                        // Duyệt xem media cần thêm có tồn tại trong playlist không
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (Path.GetFileName(line) == listView.FocusedItem.Text)
+                            {
+                                MessageBox.Show("The media already existed in \"" + args.ClickedItem.Text + "\"", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                available = true;  // Media đã tồn tại
+                                break;
+                            }
+                        }
+
+                        reader.Close();
+                        stream.Close();
+                    }
+                    catch
+                    {
+
+                    }
+
+                    // Nếu media cần thêm chưa tồn tại trong playlist
+                    if (!available)
+                    {
+                        // Lấy đường dẫn của media đó
+                        foreach (string item in dirMedia)
+                        {
+                            if (Path.GetFileName(item) == listView.FocusedItem.Text)
+                            {
+                                MessageBox.Show("Successfully !", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                File.AppendAllText(@"Playlist\" + args.ClickedItem.Text + ".txt", item + Environment.NewLine);  // Ghi đường dẫn vào file .txt
+                                break;
+                            }
+                        }
+                    }
+                };
+
+
                 // Xem thông tin media
                 iProperty.Click += (sender, args) =>
                 {
@@ -312,7 +426,68 @@ namespace Player
             }
             else if (type == "Playlist")  // Xử lý click phải cho lvPlaylist
             {
-                context.Items.Add(iDelete);  // Thêm ToolStripItem delete
+                context.Items.AddRange(new ToolStripItem[] { iRename, iDelete });
+
+                // Đổi tên playlist
+                iRename.Click += (sender, args) =>
+                {
+                    listView.LabelEdit = true;
+                    listView.FocusedItem.BeginEdit();
+
+                    listView.AfterLabelEdit += (obj, evt) =>
+                    {
+                        //MessageBox.Show(evt.Item + "\n" + listView.FocusedItem.Text);
+                        if (evt.Label != string.Empty && evt.Label != listView.FocusedItem.Text && !Directory.GetFiles(@"Playlist", "*.txt").Contains(@"Playlist\" + evt.Label + ".txt"))
+                        {
+                            List<string> temp = new List<string>();
+
+                            try
+                            {
+                                string line = string.Empty;
+                                FileStream stream = new FileStream(@"Playlist\" + listView.FocusedItem.Text + ".txt", FileMode.Open);
+                                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                                
+                                while ((line = reader.ReadLine()) != null)
+                                {
+                                    temp.Add(line);
+                                }
+
+                                reader.Close();
+                                stream.Close();
+                            }
+                            catch
+                            {
+
+                            }
+
+                            File.Delete(@"Playlist\" + listView.FocusedItem.Text + ".txt");
+
+                            try
+                            {
+                                FileStream stream = new FileStream(@"Playlist\" + evt.Label + ".txt", FileMode.CreateNew);
+                                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
+
+                                foreach (string item in temp)
+                                {
+                                    writer.WriteLine(item);
+                                }
+
+                                writer.Close();
+                                stream.Close();
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("The name already existed !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            //evt.CancelEdit = true;
+                        }
+                    };
+                };
+
 
                 // Xóa playlist
                 iDelete.Click += (sender, args) =>
@@ -355,6 +530,9 @@ namespace Player
         }
 
 
+/***************************************************************************************/
+
+
         // Phương thức xử lý nút Listen ở giao diện chính
         public void listen(Panel pListen)
         {
@@ -365,28 +543,31 @@ namespace Player
             // Khung Playing chứa danh sách phát hoặc lyric
             GroupBox gbPlaying = new GroupBox();
             pListen.Controls.Add(gbPlaying);
-            gbPlaying.Location = new Point(2, 12);
-            gbPlaying.Size = new Size(449, 397);
-            gbPlaying.ForeColor = Color.Yellow;
-            gbPlaying.Font = new Font("Lucida Bright", 18, FontStyle.Bold, GraphicsUnit.Pixel);
-            gbPlaying.Text = "Your Media";
+            gbPlaying.Location = new Point(0, 12);
+            gbPlaying.Size = new Size(454, 397);
+            gbPlaying.ForeColor = Color.Lime;
+            gbPlaying.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbPlaying.Text = "My Music";
             
             RichTextBox rtbLyric = new RichTextBox();
             gbPlaying.Controls.Add(rtbLyric);
             rtbLyric.Dock = DockStyle.Fill;
-            rtbLyric.Font = new Font("Arial", 17, FontStyle.Italic, GraphicsUnit.Pixel);
+            rtbLyric.BackColor = Color.Azure;
+            rtbLyric.ForeColor = Color.Black;
+            rtbLyric.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
             rtbLyric.Text = "Please wait a moment ...";
             rtbLyric.Visible = false;
             
             ListView lvPlaying = new ListView();
             gbPlaying.Controls.Add(lvPlaying);
             lvPlaying.Dock = DockStyle.Fill;
-            lvPlaying.View = View.List;
+            lvPlaying.View = View.Tile;
             lvPlaying.MultiSelect = false;
-            lvPlaying.ForeColor = Color.Blue;
-            lvPlaying.BackColor = Color.Azure;
-            lvPlaying.Font = new Font("Times New Roman", 20, FontStyle.Regular, GraphicsUnit.Pixel);
-
+            lvPlaying.BackgroundImage = Resources.PlayingWall;
+            lvPlaying.BackgroundImageTiled = true;
+            lvPlaying.ForeColor = Color.Black;
+            lvPlaying.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
+            
 
             // Load danh sách đang phát lên lvPlaying
             if (!wmp.status.Contains("Play"))  // Nếu bấm nút Listen lần đầu tiên => Play tất cả các media có sẵn
@@ -420,12 +601,6 @@ namespace Player
                 }
                 
                 wmp.currentPlaylist = playlist;
-
-                if(dirMedia.Count == 0)
-                {
-                    lvPlaying.Items.Add("Your media will be displayed here");
-                    lvPlaying.Items.Add("Please select your music folder first !");
-                }
             }
             else if(itemClicked != string.Empty)  // Hiển thị bài hát được click trong Search Result
             {
@@ -455,7 +630,7 @@ namespace Player
             // Nút Back
             PictureBox pbBack = new PictureBox();
             pListen.Controls.Add(pbBack);
-            pbBack.Location = new Point(466, 12);
+            pbBack.Location = new Point(468, 28);
             pbBack.Size = new Size(85, 85);
             pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
             pbBack.BackColor = Color.Transparent;
@@ -489,7 +664,7 @@ namespace Player
             // Nút Player
             PictureBox pbPlayer = new PictureBox();
             pListen.Controls.Add(pbPlayer);
-            pbPlayer.Location = new Point(466, 109);
+            pbPlayer.Location = new Point(475, 115);
             pbPlayer.Size = new Size(85, 85);
             pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
@@ -517,7 +692,7 @@ namespace Player
             // Nút Open
             PictureBox pbOpen = new PictureBox();
             pListen.Controls.Add(pbOpen);
-            pbOpen.Location = new Point(466, 217);
+            pbOpen.Location = new Point(468, 213);
             pbOpen.Size = new Size(85, 85);
             pbOpen.SizeMode = PictureBoxSizeMode.CenterImage;
             pbOpen.BackColor = Color.Transparent;
@@ -567,7 +742,7 @@ namespace Player
             // Nút Home
             PictureBox pbHome = new PictureBox();
             pListen.Controls.Add(pbHome);
-            pbHome.Location = new Point(466, 310);
+            pbHome.Location = new Point(468, 303);
             pbHome.Size = new Size(85, 85);
             pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
             pbHome.BackColor = Color.Transparent;
@@ -593,7 +768,344 @@ namespace Player
             };
         }
 
-        
+
+/***************************************************************************************/
+
+
+        // Phương thức xử lý nút Karaoke ở giao diện chính
+        public void karaoke(Panel pKaraoke)
+        {
+            pKaraoke.BackColor = Color.Black;
+            string status = "Karaoke";
+            List<string> dirFavorite = new List<string>();
+
+            // Ô tìm kiếm
+            TextBox txtSearch = new TextBox();
+            pKaraoke.Controls.Add(txtSearch);
+            txtSearch.Location = new Point(18, 20);
+            txtSearch.Size = new Size(300, 28);
+            txtSearch.ForeColor = Color.Black;
+            txtSearch.Font = new Font("Times New Roman", 20, FontStyle.Regular, GraphicsUnit.Pixel);
+
+            // Icon tìm kiếm
+            PictureBox btnSearch = new PictureBox();
+            pKaraoke.Controls.Add(btnSearch);
+            btnSearch.Location = new Point(325, 21);
+            btnSearch.Size = new Size(28, 28);
+            btnSearch.BackColor = Color.Transparent;
+            btnSearch.Image = Resources.SearchButton;
+
+            // Khung chứa kết quả tìm kiếm từ YouTube
+            GroupBox gbKaraoke = new GroupBox();
+            pKaraoke.Controls.Add(gbKaraoke);
+            gbKaraoke.Location = new Point(0, 60);
+            gbKaraoke.Size = new Size(454, 349);
+            gbKaraoke.ForeColor = Color.Lime;
+            gbKaraoke.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbKaraoke.Text = status;
+
+            AxShockwaveFlashObjects.AxShockwaveFlash flash = new AxShockwaveFlashObjects.AxShockwaveFlash();
+            gbKaraoke.Controls.Add(flash);
+            flash.Dock = DockStyle.Fill;
+            flash.AllowNetworking = "all";
+            flash.AllowFullScreen = "true";
+            flash.AllowScriptAccess = "always";
+            flash.BackgroundColor = 0;
+            flash.Visible = false;
+
+            ListView lvKaraoke = new ListView();
+            gbKaraoke.Controls.Add(lvKaraoke);
+            lvKaraoke.Dock = DockStyle.Fill;
+            lvKaraoke.View = View.Tile;
+            lvKaraoke.MultiSelect = false;
+            lvKaraoke.BackgroundImage = Resources.PlayingWall;
+            lvKaraoke.BackgroundImageTiled = true;
+            lvKaraoke.ForeColor = Color.Black;
+            lvKaraoke.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
+
+
+            try
+            {
+                string line = string.Empty;
+                FileStream stream = new FileStream(@"Karaoke.txt", FileMode.Open);
+                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    dirFavorite.Add(line);
+                }
+
+                reader.Close();
+                stream.Close();
+            }
+            catch
+            {
+
+            }
+
+
+            txtSearch.KeyDown += (sender, args) =>
+            {
+                if (args.KeyCode == Keys.Enter)
+                {
+                    HtmlWeb web = new HtmlWeb();
+                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+
+                    try
+                    {
+                        doc = web.Load("https://www.youtube.com/results?search_query=" + ("karaoke " + txtSearch.Text).Replace(" ", "+"));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("There is no Internet connection", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    getURL(lvKaraoke, doc);
+                    gbKaraoke.Text = status = "Search Result";
+                    flash.Visible = false;
+                }
+            };
+
+
+            // Xử lý click chuột lên lvKaraoke
+            lvKaraoke.MouseClick += (sender, args) =>
+            {
+                if (args.Button == MouseButtons.Left)
+                {
+                    if (status == "Search Result")
+                    {
+                        wmp.Ctlcontrols.stop();
+                        flash.Movie = urlYouTube[lvKaraoke.FocusedItem.Index];
+                        flash.Visible = true;
+                        gbKaraoke.Text = lvKaraoke.FocusedItem.Text;
+                    }
+                    else
+                    {
+                        foreach (string item in dirFavorite)
+                        {
+                            if (item == lvKaraoke.FocusedItem.Text)
+                            {
+                                wmp.Ctlcontrols.stop();
+                                flash.Movie = dirFavorite[dirFavorite.IndexOf(item) + 1];
+                                flash.Visible = true;
+                                gbKaraoke.Text = lvKaraoke.FocusedItem.Text;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (status == "Search Result")
+                    {
+                        ContextMenuStrip context = new ContextMenuStrip();
+                        ToolStripItem iFavorite = new ToolStripMenuItem("Add to Favorite");
+                        context.Items.Add(iFavorite);
+                        lvKaraoke.ContextMenuStrip = context;
+
+                        iFavorite.Click += (obj, evt) =>
+                        {
+                            bool available = false;
+
+                            foreach (string item in dirFavorite)
+                            {
+                                if (item == urlYouTube[lvKaraoke.FocusedItem.Index])
+                                {
+                                    available = true;
+                                    break;
+                                }
+                            }
+
+                            if (!available)
+                            {
+                                MessageBox.Show("Successfully !", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                File.AppendAllText(@"Karaoke.txt", lvKaraoke.FocusedItem.Text + Environment.NewLine + urlYouTube[lvKaraoke.FocusedItem.Index] + Environment.NewLine);
+                                dirFavorite.Add(lvKaraoke.FocusedItem.Text);
+                                dirFavorite.Add(urlYouTube[lvKaraoke.FocusedItem.Index]);
+                            }
+                            else
+                                MessageBox.Show("The video already existed !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        };
+                    }
+                    else
+                    {
+                        ContextMenuStrip context = new ContextMenuStrip();
+                        ToolStripItem iDelete = new ToolStripMenuItem("Delete");
+                        context.Items.Add(iDelete);
+                        lvKaraoke.ContextMenuStrip = context;
+
+                        iDelete.Click += (obj, evt) =>
+                        {
+                            // Xóa Title + URL cần xóa
+                            foreach (string item in dirFavorite)
+                            {
+                                if (item == lvKaraoke.FocusedItem.Text)
+                                {
+                                    dirFavorite.RemoveRange(dirFavorite.IndexOf(item), 2);
+                                    break;
+                                }
+                            }
+
+                            File.Delete(@"Karaoke.txt");  // Xóa file Karaoke.txt
+
+                            try
+                            {
+                                // Tạo mới file Karaoke.txt
+                                FileStream stream = new FileStream(@"Karaoke.txt", FileMode.CreateNew);
+                                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
+
+                                foreach (string item in dirFavorite)
+                                {
+                                    writer.WriteLine(item);  // Ghi các đường dẫn Favorite đã update
+                                }
+
+                                writer.Close();
+                                stream.Close();
+                            }
+                            catch
+                            {
+
+                            }
+
+                            lvKaraoke.Items.Remove(lvKaraoke.FocusedItem);  // Xóa tên video khỏi lvKaraoke
+                        };
+                    }
+                }
+            };
+
+
+            // Nút Back
+            PictureBox pbBack = new PictureBox();
+            pKaraoke.Controls.Add(pbBack);
+            pbBack.Location = new Point(466, 28);
+            pbBack.Size = new Size(85, 85);
+            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
+            pbBack.BackColor = Color.Transparent;
+            pbBack.Image = Resources.Back;
+
+            // Zoom-in
+            pbBack.MouseHover += (sender, args) =>
+            {
+                mouseHover(Resources.Back, pbBack, "Back");
+            };
+
+            // Zoom-out
+            pbBack.MouseLeave += (sender, args) =>
+            {
+                mouseLeave(Resources.Back, pbBack);
+            };
+
+            // Click nút Back
+            pbBack.Click += (sender, args) =>
+            {
+                if (flash.Visible)
+                    flash.Visible = false;
+                else
+                    pKaraoke.SendToBack();
+
+                gbKaraoke.Text = status;
+            };
+
+
+            // Nút Player
+            PictureBox pbPlayer = new PictureBox();
+            pKaraoke.Controls.Add(pbPlayer);
+            pbPlayer.Location = new Point(475, 114);
+            pbPlayer.Size = new Size(85, 85);
+            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
+            pbPlayer.BackColor = Color.Transparent;
+            pbPlayer.Image = Resources.Player;
+
+            // Zoom-in
+            pbPlayer.MouseHover += (sender, args) =>
+            {
+                mouseHover(Resources.Player, pbPlayer, "Player");
+            };
+
+            // Zoom-out
+            pbPlayer.MouseLeave += (sender, args) =>
+            {
+                mouseLeave(Resources.Player, pbPlayer);
+            };
+
+            // Click nút Player
+            pbPlayer.Click += (sender, args) =>
+            {
+                flash.Visible = true;
+            };
+
+
+            // Nút Favorite
+            PictureBox pbFavorite = new PictureBox();
+            pKaraoke.Controls.Add(pbFavorite);
+            pbFavorite.Location = new Point(468, 216);
+            pbFavorite.Size = new Size(85, 85);
+            pbFavorite.SizeMode = PictureBoxSizeMode.CenterImage;
+            pbFavorite.BackColor = Color.Transparent;
+            pbFavorite.Image = Resources.Favorite;
+
+            // Zoom-in
+            pbFavorite.MouseHover += (sender, args) =>
+            {
+                mouseHover(Resources.Favorite, pbFavorite, "Favorite");
+            };
+
+            // Zoom-out
+            pbFavorite.MouseLeave += (sender, args) =>
+            {
+                mouseLeave(Resources.Favorite, pbFavorite);
+            };
+
+            // Click nút Location
+            pbFavorite.Click += (sender, args) =>
+            {
+                int i = 0;
+                lvKaraoke.Clear();
+                flash.Visible = false;
+                gbKaraoke.Text = status = "Favorite";
+
+                foreach (string item in dirFavorite)
+                {
+                    if (i % 2 == 0)
+                        lvKaraoke.Items.Add(item);
+
+                    i++;
+                }
+            };
+
+
+            // Nút Home
+            PictureBox pbHome = new PictureBox();
+            pKaraoke.Controls.Add(pbHome);
+            pbHome.Location = new Point(468, 303);
+            pbHome.Size = new Size(85, 85);
+            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
+            pbHome.BackColor = Color.Transparent;
+            pbHome.Image = Resources.Home;
+
+            // Zoom-in
+            pbHome.MouseHover += (sender, args) =>
+            {
+                mouseHover(Resources.Home, pbHome, "Home");
+            };
+
+            // Zoom-out
+            pbHome.MouseLeave += (sender, args) =>
+            {
+                mouseLeave(Resources.Home, pbHome);
+            };
+
+            // Click nút Home
+            pbHome.Click += (sender, args) =>
+            {
+                pKaraoke.SendToBack();
+                gbKaraoke.Text = status;
+            };
+        }
+
+
+/***************************************************************************************/
+
+
         // Phương thức xử lý nút Playlist ở giao diện chính
         public void playlist(Panel pPlaylist)
         {
@@ -603,45 +1115,49 @@ namespace Player
             // Khung chứa danh sách các Playlist
             GroupBox gbPlaylist = new GroupBox();
             pPlaylist.Controls.Add(gbPlaylist);
-            gbPlaylist.Location = new Point(2, 12);
-            gbPlaylist.Size = new Size(190, 397);
-            gbPlaylist.ForeColor = Color.Yellow;
-            gbPlaylist.Font = new Font("Lucida Bright", 18, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbPlaylist.Location = new Point(0, 12);
+            gbPlaylist.Size = new Size(160, 397);
+            gbPlaylist.ForeColor = Color.Lime;
+            gbPlaylist.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
             gbPlaylist.Text = "Playlist";
 
             ListView lvPlaylist = new ListView();
             gbPlaylist.Controls.Add(lvPlaylist);
             lvPlaylist.Dock = DockStyle.Fill;
-            lvPlaylist.View = View.List;
+            lvPlaylist.View = View.SmallIcon;
             lvPlaylist.MultiSelect = false;
-            lvPlaylist.ForeColor = Color.Red;
-            lvPlaylist.BackColor = Color.Azure;
-            lvPlaylist.Font = new Font("Times New Roman", 20, FontStyle.Regular, GraphicsUnit.Pixel);
+            lvPlaylist.BorderStyle = BorderStyle.None;
+            lvPlaylist.BackColor = Color.Black;
+            lvPlaylist.ForeColor = Color.DeepSkyBlue;
+            lvPlaylist.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
 
             // Khung chứa danh sách các media đang phát
             GroupBox gbPlaying = new GroupBox();
             pPlaylist.Controls.Add(gbPlaying);
-            gbPlaying.Location = new Point(195, 12);
-            gbPlaying.Size = new Size(259, 397);
-            gbPlaying.ForeColor = Color.Yellow;
-            gbPlaying.Font = new Font("Lucida Bright", 18, FontStyle.Bold, GraphicsUnit.Pixel);
-            gbPlaying.Text = "Your Media";
+            gbPlaying.Location = new Point(159, 12);
+            gbPlaying.Size = new Size(295, 397);
+            gbPlaying.ForeColor = Color.Lime;
+            gbPlaying.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbPlaying.Text = "Your Music";
 
             RichTextBox rtbLyric = new RichTextBox();
             gbPlaying.Controls.Add(rtbLyric);
             rtbLyric.Dock = DockStyle.Fill;
-            rtbLyric.Font = new Font("Arial", 17, FontStyle.Italic, GraphicsUnit.Pixel);
+            rtbLyric.BackColor = Color.Azure;
+            rtbLyric.ForeColor = Color.Black;
+            rtbLyric.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
             rtbLyric.Text = "Please wait a moment ...";
             rtbLyric.Visible = false;
 
             ListView lvPlaying = new ListView();
             gbPlaying.Controls.Add(lvPlaying);
             lvPlaying.Dock = DockStyle.Fill;
-            lvPlaying.View = View.List;
+            lvPlaying.View = View.Tile;
             lvPlaying.MultiSelect = false;
-            lvPlaying.ForeColor = Color.Blue;
-            lvPlaying.BackColor = Color.Azure;
-            lvPlaying.Font = new Font("Times New Roman", 20, FontStyle.Regular, GraphicsUnit.Pixel);
+            lvPlaying.BackgroundImage = Resources.PlayingWall;
+            lvPlaying.BackgroundImageTiled = true;
+            lvPlaying.ForeColor = Color.Black;
+            lvPlaying.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
             
 
             // Load tất cả các playlist lên khung Playlist lần đầu tiên
@@ -649,7 +1165,10 @@ namespace Player
             {
                 foreach (string item in Directory.GetFiles(@"Playlist", "*.txt"))
                 {
-                    lvPlaylist.Items.Add(Path.GetFileNameWithoutExtension(item));
+                    if (Path.GetFileNameWithoutExtension(item) != string.Empty)
+                        lvPlaylist.Items.Add(Path.GetFileNameWithoutExtension(item));
+                    else
+                        File.Delete(item);
                 }
             }
             catch
@@ -702,7 +1221,7 @@ namespace Player
             // Nút Back
             PictureBox pbBack = new PictureBox();
             pPlaylist.Controls.Add(pbBack);
-            pbBack.Location = new Point(467, 12);
+            pbBack.Location = new Point(467, 28);
             pbBack.Size = new Size(85, 85);
             pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
             pbBack.BackColor = Color.Transparent;
@@ -736,7 +1255,7 @@ namespace Player
             // Nút Player
             PictureBox pbPlayer = new PictureBox();
             pPlaylist.Controls.Add(pbPlayer);
-            pbPlayer.Location = new Point(467, 115);
+            pbPlayer.Location = new Point(475, 116);
             pbPlayer.Size = new Size(85, 85);
             pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
@@ -764,7 +1283,7 @@ namespace Player
             // Nút NewPlaylist
             PictureBox pbNewPlaylist = new PictureBox();
             pPlaylist.Controls.Add(pbNewPlaylist);
-            pbNewPlaylist.Location = new Point(467, 218);
+            pbNewPlaylist.Location = new Point(467, 214);
             pbNewPlaylist.Size = new Size(85, 85);
             pbNewPlaylist.SizeMode = PictureBoxSizeMode.CenterImage;
             pbNewPlaylist.BackColor = Color.Transparent;
@@ -829,7 +1348,7 @@ namespace Player
             // Nút Home
             PictureBox pbHome = new PictureBox();
             pPlaylist.Controls.Add(pbHome);
-            pbHome.Location = new Point(467, 310);
+            pbHome.Location = new Point(467, 303);
             pbHome.Size = new Size(85, 85);
             pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
             pbHome.BackColor = Color.Transparent;
@@ -856,7 +1375,10 @@ namespace Player
             };
         }
 
-        
+
+/***************************************************************************************/
+
+
         // Phương thức xử lý nút Search trong giao diện chính
         public void search(Panel pSearch)
         {
@@ -867,15 +1389,15 @@ namespace Player
             // Ô tìm kiếm
             TextBox txtSearch = new TextBox();
             pSearch.Controls.Add(txtSearch);
-            txtSearch.Location = new Point(14, 17);
+            txtSearch.Location = new Point(18, 20);
             txtSearch.Size = new Size(300, 28);
-            txtSearch.ForeColor = Color.Lime;
+            txtSearch.ForeColor = Color.Black;
             txtSearch.Font = new Font("Times New Roman", 20, FontStyle.Regular, GraphicsUnit.Pixel);
 
             // Icon tìm kiếm
             PictureBox btnSearch = new PictureBox();
             pSearch.Controls.Add(btnSearch);
-            btnSearch.Location = new Point(321, 18);
+            btnSearch.Location = new Point(325, 21);
             btnSearch.Size = new Size(28, 28);
             btnSearch.BackColor = Color.Transparent;
             btnSearch.Image = Resources.SearchButton;
@@ -883,45 +1405,49 @@ namespace Player
             // Khung hiển thị các thư mục mặc định chứa media
             GroupBox gbLocation = new GroupBox();
             pSearch.Controls.Add(gbLocation);
-            gbLocation.Location = new Point(2, 59);
-            gbLocation.Size = new Size(190, 349);
-            gbLocation.ForeColor = Color.Yellow;
-            gbLocation.Font = new Font("Lucida Bright", 18, FontStyle.Bold, GraphicsUnit.Pixel);
-            gbLocation.Text = "Media Location";
+            gbLocation.Location = new Point(0, 62);
+            gbLocation.Size = new Size(160, 347);
+            gbLocation.ForeColor = Color.Lime;
+            gbLocation.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbLocation.Text = "Music Folder";
 
             ListView lvLocation = new ListView();
             gbLocation.Controls.Add(lvLocation);
             lvLocation.Dock = DockStyle.Fill;
             lvLocation.View = View.SmallIcon;
             lvLocation.MultiSelect = false;
-            lvLocation.ForeColor = Color.Red;
-            lvLocation.BackColor = Color.Azure;
-            lvLocation.Font = new Font("Times New Roman", 20, FontStyle.Regular, GraphicsUnit.Pixel);
-
+            lvLocation.BorderStyle = BorderStyle.None;
+            lvLocation.BackColor = Color.Black;
+            lvLocation.ForeColor = Color.DeepSkyBlue;
+            lvLocation.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
+            
             // Khung hiển thị kết quả tìm kiếm
             GroupBox gbSearch = new GroupBox();
             pSearch.Controls.Add(gbSearch);
-            gbSearch.Location = new Point(195, 59);
-            gbSearch.Size = new Size(259, 349);
-            gbSearch.ForeColor = Color.Yellow;
-            gbSearch.Font = new Font("Lucida Bright", 18, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbSearch.Location = new Point(159, 62);
+            gbSearch.Size = new Size(296, 347);
+            gbSearch.ForeColor = Color.Lime;
+            gbSearch.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
             gbSearch.Text = "Search Result";
 
             RichTextBox rtbLyric = new RichTextBox();
             gbSearch.Controls.Add(rtbLyric);
             rtbLyric.Dock = DockStyle.Fill;
-            rtbLyric.Font = new Font("Arial", 17, FontStyle.Italic, GraphicsUnit.Pixel);
+            rtbLyric.BackColor = Color.Azure;
+            rtbLyric.ForeColor = Color.Black;
+            rtbLyric.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
             rtbLyric.Text = "Please wait a moment ...";
             rtbLyric.Visible = false;
 
             ListView lvSearch = new ListView();
             gbSearch.Controls.Add(lvSearch);
             lvSearch.Dock = DockStyle.Fill;
-            lvSearch.View = View.List;
+            lvSearch.View = View.Tile;
             lvSearch.MultiSelect = false;
-            lvSearch.ForeColor = Color.Blue;
-            lvSearch.BackColor = Color.Azure;
-            lvSearch.Font = new Font("Times New Roman", 20, FontStyle.Regular, GraphicsUnit.Pixel);
+            lvSearch.BackgroundImage = Resources.PlayingWall;
+            lvSearch.BackgroundImageTiled = true;
+            lvSearch.ForeColor = Color.Black;
+            lvSearch.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
 
 
             // Load tất cả các thư mục mặc định chứa media lên lvLocation
@@ -950,13 +1476,10 @@ namespace Player
             txtSearch.TextChanged += (sender, args) =>
             {
                 if (lvLocation.Items.Count == 0)  // Yêu cầu chọn thư mục chứa các media cần tìm
-                {
-                    lvSearch.Items.Clear();
-                    lvSearch.Items.Add("Please select a music folder !");
-                }
+                    MessageBox.Show("Please choose where to look !", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 else
                 {
-                    lvSearch.Clear(); 
+                    lvSearch.Clear();
                     gbSearch.Text = "Search Result";
                     rtbLyric.Visible = false;
                     rtbLyric.Text = "Please wait a moment ...";
@@ -971,13 +1494,13 @@ namespace Player
                             if (item.EndsWith(".mp3") || item.EndsWith(".wav") || item.EndsWith(".flac") || item.EndsWith(".mpg") || item.EndsWith(".mp4") || item.EndsWith(".mkv") || item.EndsWith(".vob"))
                                 dirMedia.Add(item);  // Lưu tất cả đường dẫn media dùng cho tìm kiếm
                         }
-                    } 
-                    
+                    }
+
                     // Nếu từ khóa trong ô rtbSearch phù hợp => Hiển thị các media liên quan lên lvSearch
                     foreach (string item in dirMedia)
-                    {   
+                    {
                         // Kiểm tra từ khóa tìm kiếm hợp lệ hay không
-                        if (txtSearch.Text.Trim() != string.Empty && convertText(Path.GetFileNameWithoutExtension(item)).ToLower().Trim().Replace("-", " ").Replace("  ", " ").Contains(convertText(txtSearch.Text).ToLower().Trim().Replace("  ", " ")))
+                        if (txtSearch.Text.Trim() != string.Empty && convertText(Path.GetFileNameWithoutExtension(item)).ToLower().Trim().Replace("-", " ").Replace("+", " ").Replace("  ", " ").Contains(convertText(txtSearch.Text).ToLower().Trim().Replace("  ", " ")))
                         {
                             lvSearch.Items.Add(Path.GetFileName(item));
                             found = true;
@@ -1033,7 +1556,7 @@ namespace Player
             // Nút Back
             PictureBox pbBack = new PictureBox();
             pSearch.Controls.Add(pbBack);
-            pbBack.Location = new Point(466, 12);
+            pbBack.Location = new Point(468, 28);
             pbBack.Size = new Size(85, 85);
             pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
             pbBack.BackColor = Color.Transparent;
@@ -1073,7 +1596,7 @@ namespace Player
             // Nút Player
             PictureBox pbPlayer = new PictureBox();
             pSearch.Controls.Add(pbPlayer);
-            pbPlayer.Location = new Point(466, 112);
+            pbPlayer.Location = new Point(475, 114);
             pbPlayer.Size = new Size(85, 85);
             pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
@@ -1101,7 +1624,7 @@ namespace Player
             // Nút Location
             PictureBox pbLocation = new PictureBox();
             pSearch.Controls.Add(pbLocation);
-            pbLocation.Location = new Point(466, 214);
+            pbLocation.Location = new Point(468, 216);
             pbLocation.Size = new Size(85, 85);
             pbLocation.SizeMode = PictureBoxSizeMode.CenterImage;
             pbLocation.BackColor = Color.Transparent;
@@ -1110,7 +1633,7 @@ namespace Player
             // Zoom-in
             pbLocation.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Location, pbLocation, "Choose where we look for music !");
+                mouseHover(Resources.Location, pbLocation, "Choose where to look !");
             };
 
             // Zoom-out
@@ -1177,7 +1700,7 @@ namespace Player
             // Nút Home
             PictureBox pbHome = new PictureBox();
             pSearch.Controls.Add(pbHome);
-            pbHome.Location = new Point(466, 310);
+            pbHome.Location = new Point(468, 303);
             pbHome.Size = new Size(85, 85);
             pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
             pbHome.BackColor = Color.Transparent;
@@ -1211,7 +1734,10 @@ namespace Player
             };
         }
 
-        
+
+/***************************************************************************************/
+
+
         public void power(Form form, Panel pPower)
         {
             int time = 0;
@@ -1223,16 +1749,16 @@ namespace Player
             // Khung Timer
             GroupBox gbTimer = new GroupBox();
             pPower.Controls.Add(gbTimer);
-            gbTimer.Location = new Point(2, 12);
-            gbTimer.Size = new Size(448, 397);
-            gbTimer.ForeColor = Color.Yellow;
-            gbTimer.Font = new Font("Lucida Bright", 18, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbTimer.Location = new Point(0, 12);
+            gbTimer.Size = new Size(455, 397);
+            gbTimer.ForeColor = Color.Lime;
+            gbTimer.Font = new Font("Times New Roman", 22, FontStyle.Bold, GraphicsUnit.Pixel);
             gbTimer.Text = "Music Timer";
 
             // Label chủ đề
             Label lblTitle = new Label();
             gbTimer.Controls.Add(lblTitle);
-            lblTitle.Location = new Point(115, 46);
+            lblTitle.Location = new Point(119, 46);
             lblTitle.Width = 250;
             lblTitle.ForeColor = Color.Blue;
             lblTitle.Font = new Font("Lucida Bright", 24, FontStyle.Bold, GraphicsUnit.Pixel);
@@ -1243,14 +1769,14 @@ namespace Player
             gbTimer.Controls.Add(cbHour);
             cbHour.FlatStyle = FlatStyle.Popup;
             cbHour.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbHour.Location = new Point(24, 102);
+            cbHour.Location = new Point(28, 102);
             cbHour.Width = 50;
             cbHour.ForeColor = Color.Lime;
             cbHour.Font = new Font("Times New Roman", 18, FontStyle.Regular, GraphicsUnit.Pixel);
 
             Label lblHour = new Label();
             gbTimer.Controls.Add(lblHour);
-            lblHour.Location = new Point(76, 106);
+            lblHour.Location = new Point(80, 106);
             lblHour.Width = 80;
             lblHour.ForeColor = Color.Red;
             lblHour.Font = new Font("Lucida Bright", 18, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -1261,14 +1787,14 @@ namespace Player
             gbTimer.Controls.Add(cbMinute);
             cbMinute.FlatStyle = FlatStyle.Popup;
             cbMinute.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbMinute.Location = new Point(157, 102);
+            cbMinute.Location = new Point(161, 102);
             cbMinute.Width = 50;
             cbMinute.ForeColor = Color.Lime;
             cbMinute.Font = new Font("Times New Roman", 18, FontStyle.Regular, GraphicsUnit.Pixel);
 
             Label lblMinute = new Label();
             gbTimer.Controls.Add(lblMinute);
-            lblMinute.Location = new Point(209, 106);
+            lblMinute.Location = new Point(213, 106);
             lblMinute.Width = 80;
             lblMinute.ForeColor = Color.Red;
             lblMinute.Font = new Font("Lucida Bright", 18, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -1279,14 +1805,14 @@ namespace Player
             gbTimer.Controls.Add(cbSecond);
             cbSecond.FlatStyle = FlatStyle.Popup;
             cbSecond.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbSecond.Location = new Point(306, 102);
+            cbSecond.Location = new Point(310, 102);
             cbSecond.Width = 50;
             cbSecond.ForeColor = Color.Lime;
             cbSecond.Font = new Font("Times New Roman", 18, FontStyle.Regular, GraphicsUnit.Pixel);
 
             Label lblSecond = new Label();
             gbTimer.Controls.Add(lblSecond);
-            lblSecond.Location = new Point(358, 106);
+            lblSecond.Location = new Point(362, 106);
             lblSecond.Width = 80;
             lblSecond.ForeColor = Color.Red;
             lblSecond.Font = new Font("Lucida Bright", 18, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -1314,15 +1840,16 @@ namespace Player
             // Label hiển thị thời gian còn lại
             Label lblRemain = new Label();
             gbTimer.Controls.Add(lblRemain);
-            lblRemain.Location = new Point(47, 165);
-            lblRemain.Width = 265;
+            lblRemain.Location = new Point(46, 165);
+            lblRemain.Width = 270;
             lblRemain.ForeColor = Color.Yellow;
 
+            
             // Nút Close đóng ứng dụng
             Button btnClose = new Button();
             gbTimer.Controls.Add(btnClose);
-            btnClose.Location = new Point(47, 200);
-            btnClose.Size = new Size(110, 38);
+            btnClose.Location = new Point(49, 200);
+            btnClose.Size = new Size(114, 38);
             btnClose.ForeColor = Color.Lime;
             btnClose.Text = "Close";
 
@@ -1337,8 +1864,8 @@ namespace Player
             // Nút Sleep
             Button btnSleep = new Button();
             gbTimer.Controls.Add(btnSleep);
-            btnSleep.Location = new Point(167, 200);
-            btnSleep.Size = new Size(110, 38);
+            btnSleep.Location = new Point(169, 200);
+            btnSleep.Size = new Size(114, 38);
             btnSleep.ForeColor = Color.Lime;
             btnSleep.Text = "Sleep";
 
@@ -1353,8 +1880,8 @@ namespace Player
             // Nút Shutdown
             Button btnShutdown = new Button();
             gbTimer.Controls.Add(btnShutdown);
-            btnShutdown.Location = new Point(287, 200);
-            btnShutdown.Size = new Size(110, 38);
+            btnShutdown.Location = new Point(289, 200);
+            btnShutdown.Size = new Size(114, 38);
             btnShutdown.ForeColor = Color.Lime;
             btnShutdown.Text = "Shutdown";
 
@@ -1369,8 +1896,8 @@ namespace Player
             // Nút Pause
             Button btnPause = new Button();
             gbTimer.Controls.Add(btnPause);
-            btnPause.Location = new Point(47, 245);
-            btnPause.Size = new Size(110, 38);
+            btnPause.Location = new Point(49, 245);
+            btnPause.Size = new Size(114, 38);
             btnPause.ForeColor = Color.Lime;
             btnPause.Text = "Pause";
             btnPause.Enabled = false;
@@ -1378,8 +1905,8 @@ namespace Player
             // Nút Resume
             Button btnResume = new Button();
             gbTimer.Controls.Add(btnResume);
-            btnResume.Location = new Point(167, 245);
-            btnResume.Size = new Size(110, 38);
+            btnResume.Location = new Point(169, 245);
+            btnResume.Size = new Size(114, 38);
             btnResume.ForeColor = Color.Lime;
             btnResume.Text = "Resume";
             btnResume.Enabled = false;
@@ -1387,8 +1914,8 @@ namespace Player
             // Nút Cancel
             Button btnCancel = new Button();
             gbTimer.Controls.Add(btnCancel);
-            btnCancel.Location = new Point(287, 245);
-            btnCancel.Size = new Size(110, 38);
+            btnCancel.Location = new Point(289, 245);
+            btnCancel.Size = new Size(114, 38);
             btnCancel.ForeColor = Color.Lime;
             btnCancel.Text = "Cancel";
             btnCancel.Enabled = false;
@@ -1480,7 +2007,7 @@ namespace Player
             // Nút Player
             PictureBox pbPlayer = new PictureBox();
             pPower.Controls.Add(pbPlayer);
-            pbPlayer.Location = new Point(466, 210);
+            pbPlayer.Location = new Point(476, 205);
             pbPlayer.Size = new Size(85, 85);
             pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
@@ -1508,7 +2035,7 @@ namespace Player
             // Nút Home
             PictureBox pbHome = new PictureBox();
             pPower.Controls.Add(pbHome);
-            pbHome.Location = new Point(466, 310);
+            pbHome.Location = new Point(469, 303);
             pbHome.Size = new Size(85, 85);
             pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
             pbHome.BackColor = Color.Transparent;

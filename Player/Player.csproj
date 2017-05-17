@@ -97,6 +97,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <COMReference Include="AxShockwaveFlashObjects">
+      <Guid>{D27CDB6B-AE6D-11CF-96B8-444553540000}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
     <COMReference Include="AxWMPLib">
       <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
       <VersionMajor>1</VersionMajor>
@@ -104,6 +112,15 @@
       <Lcid>0</Lcid>
       <WrapperTool>aximp</WrapperTool>
       <Isolated>False</Isolated>
+    </COMReference>
+    <COMReference Include="ShockwaveFlashObjects">
+      <Guid>{D27CDB6B-AE6D-11CF-96B8-444553540000}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
     <COMReference Include="WMPLib">
       <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
@@ -128,10 +145,25 @@
     <None Include="Resources\Power.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Open.png" />
+    <None Include="Resources\Home.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Home.png" />
+    <None Include="Resources\HomeWall.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SearchButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Repeat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shuffle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PlayingWall.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Karaoke.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Playlist.png" />
@@ -140,31 +172,22 @@
     <None Include="Resources\NewPlaylist.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Back.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\HomeWall.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Close.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\SearchButton.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Player.png" />
+    <None Include="Resources\Favorite.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Location.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Player.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\Return.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Repeat.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Shuffle.png" />
+    <None Include="Resources\Open.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

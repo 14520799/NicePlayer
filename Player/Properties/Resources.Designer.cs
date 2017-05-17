@@ -73,9 +73,9 @@ namespace Player.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Close {
+        internal static System.Drawing.Bitmap Favorite {
             get {
-                object obj = ResourceManager.GetObject("Close", resourceCulture);
+                object obj = ResourceManager.GetObject("Favorite", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -107,6 +107,16 @@ namespace Player.Properties {
             get {
                 object obj = ResourceManager.GetObject("Icon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Karaoke {
+            get {
+                object obj = ResourceManager.GetObject("Karaoke", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -163,6 +173,16 @@ namespace Player.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap PlayingWall {
+            get {
+                object obj = ResourceManager.GetObject("PlayingWall", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Playlist {
             get {
                 object obj = ResourceManager.GetObject("Playlist", resourceCulture);
@@ -176,16 +196,6 @@ namespace Player.Properties {
         internal static System.Drawing.Bitmap Power {
             get {
                 object obj = ResourceManager.GetObject("Power", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Repeat {
-            get {
-                object obj = ResourceManager.GetObject("Repeat", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -216,16 +226,6 @@ namespace Player.Properties {
         internal static System.Drawing.Bitmap SearchButton {
             get {
                 object obj = ResourceManager.GetObject("SearchButton", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Shuffle {
-            get {
-                object obj = ResourceManager.GetObject("Shuffle", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
