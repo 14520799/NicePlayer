@@ -1924,11 +1924,9 @@ namespace Player
                 // Nhắc nhở shutdown trước 5 phút
                 if(time - 300 == -1 && type == "Shutdown")
                 {
-                    DialogResult dialog = MessageBox.Show("Your PC will turn off after 5 minutes\nAre you sure ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    DialogResult dialog = MessageBox.Show("Your PC will shutdown after 5 minutes\nAre you sure ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     
-                    if (dialog == DialogResult.Yes)
-                        MessageBox.Show("Your PC will turn off after 5 minutes\nFinish your works !", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    else
+                    if (dialog == DialogResult.No)
                     {
                         lblRemain.Text = "Canceled !";
                         timer.Stop();
