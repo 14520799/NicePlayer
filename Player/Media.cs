@@ -5,11 +5,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
@@ -1015,7 +1013,7 @@ namespace Player
                 mouseLeave(Resources.Favorite, pbFavorite);
             };
 
-            // Click nút Location
+            // Click nút Favorite
             pbFavorite.Click += (sender, args) =>
             {
                 int i = 0;

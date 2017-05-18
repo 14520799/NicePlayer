@@ -66,7 +66,7 @@
             // 
             this.pbKaraoke.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.pbKaraoke.BackColor = System.Drawing.Color.Transparent;
-            this.pbKaraoke.Image = ((System.Drawing.Image)(resources.GetObject("pbKaraoke.Image")));
+            this.pbKaraoke.Image = global::Player.Properties.Resources.Karaoke;
             this.pbKaraoke.InitialImage = null;
             this.pbKaraoke.Location = new System.Drawing.Point(160, 321);
             this.pbKaraoke.Name = "pbKaraoke";
@@ -132,7 +132,7 @@
             this.pbPower.BackColor = System.Drawing.Color.Transparent;
             this.pbPower.Image = ((System.Drawing.Image)(resources.GetObject("pbPower.Image")));
             this.pbPower.InitialImage = null;
-            this.pbPower.Location = new System.Drawing.Point(616, 317);
+            this.pbPower.Location = new System.Drawing.Point(616, 318);
             this.pbPower.Name = "pbPower";
             this.pbPower.Size = new System.Drawing.Size(135, 135);
             this.pbPower.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
