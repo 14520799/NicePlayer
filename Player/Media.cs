@@ -434,56 +434,16 @@ namespace Player
                 {
                     listView.LabelEdit = true;
                     listView.FocusedItem.BeginEdit();
-
+                    
                     listView.AfterLabelEdit += (obj, evt) =>
                     {
-                        if (evt.Label != string.Empty && evt.Label != listView.FocusedItem.Text && !Directory.GetFiles(@"Playlist", "*.txt").Contains(@"Playlist\" + evt.Label + ".txt"))
+                        try
                         {
-                            List<string> temp = new List<string>();
-
-                            try
-                            {
-                                string line = string.Empty;
-                                FileStream stream = new FileStream(@"Playlist\" + listView.FocusedItem.Text + ".txt", FileMode.Open);
-                                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                                
-                                while ((line = reader.ReadLine()) != null)
-                                {
-                                    temp.Add(line);
-                                }
-
-                                reader.Close();
-                                stream.Close();
-                            }
-                            catch
-                            {
-
-                            }
-
-                            File.Delete(@"Playlist\" + listView.FocusedItem.Text + ".txt");
-
-                            try
-                            {
-                                FileStream stream = new FileStream(@"Playlist\" + evt.Label + ".txt", FileMode.CreateNew);
-                                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
-
-                                foreach (string item in temp)
-                                {
-                                    writer.WriteLine(item);
-                                }
-
-                                writer.Close();
-                                stream.Close();
-                            }
-                            catch
-                            {
-
-                            }
+                            File.Move(@"Playlist/" + listView.FocusedItem.Text + ".txt", evt.Label);
                         }
-                        else
+                        catch
                         {
                             MessageBox.Show("The name already existed !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //evt.CancelEdit = true;
                         }
                     };
                 };
