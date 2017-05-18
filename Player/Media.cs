@@ -1779,14 +1779,14 @@ namespace Player
             lblSecond.Text = "Second";
             
             // Thêm item cho 3 ComboBox
-            for (int i = 0; i <= 12; i++)
+            for (int i = 0; i < 13; i++)
             {
                 cbHour.Items.Add(i);
                 cbMinute.Items.Add(i);
                 cbSecond.Items.Add(i);
             }
 
-            for (int i = 13; i <= 60; i++)
+            for (int i = 13; i < 60; i++)
             {
                 cbMinute.Items.Add(i);
                 cbSecond.Items.Add(i);
