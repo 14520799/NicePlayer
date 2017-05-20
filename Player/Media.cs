@@ -32,8 +32,8 @@ namespace Player
         bool found = false;  // Kết quả tìm kiếm media
         string itemClicked = string.Empty;  // Lấy tên media được click trong Search Result
 
-        bool shuffle = false;
-        bool repeat = false;
+        public bool shuffle = false;
+        public bool repeat = false;
 
         ToolTip tip = new ToolTip();
 
@@ -1608,12 +1608,6 @@ namespace Player
                     rtbLyric.Visible = false;
                     rtbLyric.Text = "Please wait a moment ...";
                 }
-                else if(gbSearch.Text == "Result")  // Nếu đang hiển thị kết quả tìm kiếm => Xóa
-                {
-                    pSearch.SendToBack();
-                    txtSearch.Text = string.Empty;
-                    lvSearch.Clear();
-                }
                 else
                     pSearch.SendToBack();  // Hiển thị giao diện chính
             };
@@ -1750,13 +1744,6 @@ namespace Player
                 pSearch.SendToBack();
                 rtbLyric.Visible = false;
                 rtbLyric.Text = "Please wait a moment ...";
-
-                // Xóa từ khóa và kết quả tìm kiếm
-                if (gbSearch.Text == "Result")
-                {
-                    txtSearch.Text = string.Empty;
-                    lvSearch.Clear();
-                }
             };
         }
 

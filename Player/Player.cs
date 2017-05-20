@@ -32,8 +32,88 @@ namespace Player
             obj.wmp = wmp;
             this.Controls.Add(wmp);
             wmp.Dock = DockStyle.Fill;
-            
-            
+
+
+            /*// Nút Shuffle
+            PictureBox pbShuffle = new PictureBox();
+            wmp.Controls.Add(pbShuffle);
+            pbShuffle.Location = new Point(479, 379);
+            pbShuffle.Size = new Size(30, 30);
+            pbShuffle.SizeMode = PictureBoxSizeMode.CenterImage;
+            pbShuffle.BackColor = Color.Transparent;
+            pbShuffle.Image = Resources.Shuffle;
+
+            // Zoom-in
+            pbShuffle.MouseHover += (sender, args) =>
+            {
+                obj.mouseHover(Resources.Shuffle, pbShuffle, "Shuffle");
+            };
+
+            // Zoom-out
+            pbShuffle.MouseLeave += (sender, args) =>
+            {
+                if (!obj.shuffle)
+                    obj.mouseLeave(Resources.Shuffle, pbShuffle);
+            };
+
+            // Click nút Shuttle
+            pbShuffle.Click += (sender, args) =>
+            {
+                if (!obj.shuffle)
+                {
+                    obj.mouseHover(Resources.Shuffle, pbShuffle, "Shuffle");
+                    wmp.settings.setMode("shuffle", true);
+                    obj.shuffle = true;
+                }
+                else
+                {
+                    obj.mouseLeave(Resources.Shuffle, pbShuffle);
+                    wmp.settings.setMode("shuffle", false);
+                    obj.shuffle = false;
+                }
+            };
+
+
+            // Nút Repeat
+            PictureBox pbRepeat = new PictureBox();
+            wmp.Controls.Add(pbRepeat);
+            pbRepeat.Location = new Point(505, 379);
+            pbRepeat.Size = new Size(30, 30);
+            pbRepeat.SizeMode = PictureBoxSizeMode.CenterImage;
+            pbRepeat.BackColor = Color.Transparent;
+            pbRepeat.Image = Resources.Repeat;
+
+            // Zoom-in
+            pbRepeat.MouseHover += (sender, args) =>
+            {
+                obj.mouseHover(Resources.Repeat, pbRepeat, "Repeat");
+            };
+
+            // Zoom-out
+            pbRepeat.MouseLeave += (sender, args) =>
+            {
+                if (!obj.repeat)
+                    obj.mouseLeave(Resources.Repeat, pbRepeat);
+            };
+
+            // Click nút Repeat
+            pbRepeat.Click += (sender, args) =>
+            {
+                if (!obj.repeat)
+                {
+                    obj.mouseHover(Resources.Repeat, pbRepeat, "Repeat");
+                    wmp.settings.setMode("loop", true);
+                    obj.repeat = true;
+                }
+                else
+                {
+                    obj.mouseLeave(Resources.Repeat, pbRepeat);
+                    wmp.settings.setMode("loop", false);
+                    obj.repeat = false;
+                }
+            };*/
+
+
             // Nút Return
             PictureBox pbReturn = new PictureBox();
             wmp.Controls.Add(pbReturn);
@@ -69,8 +149,6 @@ namespace Player
 
         private void Player_Load(object sender, EventArgs e)
         {
-            wmp.settings.volume = 100;
-            
             // Kiểm tra và tạo thư mục chứa các file playlist *.txt
             if (!Directory.Exists(@"Playlist"))
                 Directory.CreateDirectory(@"Playlist");
@@ -82,6 +160,8 @@ namespace Player
             // Kiểm tra và tạo file Karaoke.txt
             if (!File.Exists(@"Karaoke.txt"))
                 File.Create(@"Karaoke.txt");
+
+            wmp.settings.volume = 100;
         }
 
 
