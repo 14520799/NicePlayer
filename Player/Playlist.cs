@@ -6,15 +6,15 @@ namespace Player
 {
     public partial class Playlist : Form
     {
-        string message = string.Empty;  // Biến truyền tên playlist
-
-
+        string message = string.Empty;  // Biến lưu trữ tên playlist
+        
         public Playlist()
         {
             InitializeComponent();
         }
 
 
+        // Click OK
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (txtName.Text == "")
@@ -24,6 +24,7 @@ namespace Player
         }
 
 
+        // Bấm enter
         private void txtName_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Enter)
@@ -34,12 +35,14 @@ namespace Player
         }
 
 
+        // Lấy tên playlist
         public string getName()
         {
             return message;
         }
 
 
+        // Click Cancel
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();

@@ -26,16 +26,16 @@ namespace Player
         
         string dirPlaylist = string.Empty;  // Lưu tên playlist đang phát
         List<string> dirMedia = new List<string>();  // Lưu danh sách đường dẫn các media đang phát
-        List<string> urlYouTube = new List<string>();  // Lưu danh sách URL từ YouTube dựa vào keyword (Dùng cho Karaoke)
+        List<string> urlYouTube = new List<string>();  // Lưu danh sách URL từ YouTube (Dùng cho Karaoke)
         List<string> dirLocation = new List<string>();  // Lưu danh sách đường dẫn các thư mục chứa media
         
         bool found = false;  // Kết quả tìm kiếm media
-        string itemClicked = string.Empty;  // Lấy tên media được click trong Search Result
+        string itemClicked = string.Empty;  // Lấy tên media được click trong khung Search
 
-        public bool shuffle = false;
-        public bool repeat = false;
+        public bool shuffle = false;  // Trộn bài
+        public bool repeat = false;  // Lặp tất cả
 
-        ToolTip tip = new ToolTip();
+        ToolTip tip = new ToolTip();  // Chú thích các menu
 
 
 /***************************************************************************************/
@@ -45,11 +45,9 @@ namespace Player
         public void mouseHover(Image image, PictureBox box, string message)
         {
             tip = new ToolTip();
-            tip.Show(message, box);
-
-            int width = image.Width + 5;
-            int height = image.Height + 5;
-            Bitmap bmp = new Bitmap(width, height);
+            tip.Show(message, box);  // Hiển thị chú thích của menu
+            
+            Bitmap bmp = new Bitmap(image.Width + 5, image.Height + 5);
             Graphics g = Graphics.FromImage(bmp);
             g.DrawImage(image, new Rectangle(Point.Empty, bmp.Size));
             box.Image = bmp;
@@ -62,7 +60,7 @@ namespace Player
         // Hiệu ứng zoom-out cho các Button
         public void mouseLeave(Image image, PictureBox box)
         {
-            tip.RemoveAll();
+            tip.RemoveAll();  // Xóa chú thích
             box.Image = image;
         }
 
@@ -70,7 +68,7 @@ namespace Player
 /***************************************************************************************/
 
 
-        // Trả về link bài hát dựa vào tên bài hát
+        // Trả về link bài hát dựa vào tên bài hát - CHIASENHAC.VN
         public string getLink(HtmlAgilityPack.HtmlDocument doc, ListView listView)
         {
             string link = string.Empty;
@@ -98,7 +96,7 @@ namespace Player
 /***************************************************************************************/
 
 
-        // Trả về lyric dựa vào link đã có
+        // Trả về lyric dựa vào link đã có - CHIASENHAC.VN
         public string getLyric(HtmlAgilityPack.HtmlDocument doc)
         {
             string lyric = string.Empty;
@@ -125,10 +123,10 @@ namespace Player
             }
             catch
             {
-                lyric = "502 Bad Gateway";
+                lyric = "502 Bad Gateway";  // Lỗi hệ thống quá tải
             }
             
-            return lyric.Replace("\n\n\n\n", "\n").Replace("\n\n\n", "\n");
+            return lyric.Replace("\n\n\n\n", "\n").Replace("\n\n\n", "\n");  // Xóa newline dư thừa
         }
 
 
@@ -176,22 +174,22 @@ namespace Player
         // Xử lý click trái cho lvPlaying, lvPlaylist, lvLocation
         public void leftClick(ListView listView, string type)
         {
-            if (type == "Now Playing")  // Xử lý click trái cho lvPlaying => Update dirMedia
+            if (type == "Now Playing")  // Xử lý click trái cho lvPlaying => Update biến dirMedia
             {
                 for(int i = 0; i < dirMedia.Count; i++)
                 {
                     // Nếu media được chọn = media[i]
                     if(Path.GetFileName(dirMedia[i]) == listView.FocusedItem.Text)
                     {
-                        if(found)  // Nếu media[i] nằm trong Search Result
+                        if(found)  // Nếu media[i] nằm trong khung Search
                         {
                             wmp.URL = dirMedia[i];
-                            itemClicked = Path.GetFileName(dirMedia[i]);  // Lấy tên media được chọn => Hiển thị lên Now Playing khi ấn nút Listen
+                            itemClicked = Path.GetFileName(dirMedia[i]);  // Lấy tên media được chọn => Hiển thị lên Now Playing khi ấn menu Listen
                             break;
                         }
-                        else  // Nếu media[i] nằm trong danh sách phát
+                        else  // Nếu media[i] nằm trong danh sách đang phát
                         {
-                            wmp.settings.setMode("shuffle", false);
+                            wmp.settings.setMode("shuffle", false);  // Tắt shuffle
                             WMPLib.IWMPPlaylist playlist = wmp.newPlaylist(string.Empty, string.Empty);
                             playlist.appendItem(wmp.newMedia(dirMedia[i]));  // Thêm media[i] vào playlist
                             
@@ -265,7 +263,7 @@ namespace Player
         // Xử lý click phải cho lvPlaying, lvPlaylist, lvLocation
         public void rightClick(ListView listView, RichTextBox rtbLyric, string type)
         {
-            // Khai báo 1 ContextMenuStrip + 3 ToolStripItem tùy chọn cho từng loại ListView
+            // Khai báo 1 ContextMenuStrip + 5 ToolStripItem tùy chọn cho từng loại ListView
             ContextMenuStrip context = new ContextMenuStrip();
             listView.ContextMenuStrip = context;
             
@@ -292,7 +290,7 @@ namespace Player
                 }
                 
 
-                // Thêm 3 ToolStripItem : Lyric, Delete, Property
+                // Thêm 4 ToolStripItem : Lyric, Delete, Add to, Property
                 context.Items.AddRange(new ToolStripItem[] { iLyric, iDelete, iAddTo, iProperty });
 
 
@@ -307,6 +305,8 @@ namespace Player
                 iLyric.Click += (sender, args) =>
                 {
                     rtbLyric.Visible = true;
+
+                    // Lấy tên media được chọn & xử lý chuỗi
                     string index = listView.FocusedItem.Text.Substring(0, listView.FocusedItem.Text.Length - 4);
                     index.Replace("-", " ").Replace(" ", "+");
 
@@ -326,13 +326,14 @@ namespace Player
                     // Load HTML của 1 link phù hợp với tên media nhất 
                     try
                     {
-                        doc = web.Load(getLink(doc, listView));
+                        doc = web.Load(getLink(doc, listView));  // Lấy link bài hát dựa vào tên media được chọn
                     }
                     catch
                     {
 
                     }
                     
+                    // Lấy lời bài hát
                     rtbLyric.Text = listView.FocusedItem.Text.Substring(0, listView.FocusedItem.Text.Length - 4).ToUpper() + "\n\n" + getLyric(doc) + "\n";
                 };
 
@@ -340,7 +341,7 @@ namespace Player
                 // Xóa media khỏi 1 playlist
                 iDelete.Click += (sender, args) =>
                 {
-                    // Xóa đường dẫn của media cần xóa khỏi dirMedia
+                    // Xóa đường dẫn của media cần xóa
                     foreach (string item in dirMedia)
                     {
                         if (Path.GetFileName(item) == listView.FocusedItem.Text)
@@ -350,11 +351,11 @@ namespace Player
                         }
                     }
 
-                    File.Delete(@"Playlist\" + dirPlaylist + ".txt");  // Xóa file .txt của playlist chứa media cần xóa
+                    File.Delete(@"Playlist\" + dirPlaylist + ".txt");  // Xóa playlist chứa media cần xóa
 
                     try
                     {
-                        // Tạo mới file .txt của playlist chứa media cần xóa
+                        // Tạo mới playlist với tên cũ (dirPlaylist)
                         FileStream stream = new FileStream(@"Playlist\" + dirPlaylist + ".txt", FileMode.CreateNew);
                         StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
 
@@ -379,7 +380,7 @@ namespace Player
                 iAddTo.DropDownItemClicked += (sender, args) =>
                 {
                     context.Hide();
-                    bool available = false;  // Playlist chưa tồn tại media cần thêm
+                    bool available = false;  // Playlist chưa tồn tại media sẽ thêm
 
                     try
                     {
@@ -387,7 +388,7 @@ namespace Player
                         FileStream stream = new FileStream(@"Playlist\" + args.ClickedItem.Text + ".txt", FileMode.Open);
                         StreamReader reader = new StreamReader(stream, Encoding.UTF8);
 
-                        // Duyệt xem media cần thêm có tồn tại trong playlist không
+                        // Duyệt xem media sẽ thêm có tồn tại trong playlist không
                         while ((line = reader.ReadLine()) != null)
                         {
                             if (Path.GetFileName(line) == listView.FocusedItem.Text)
@@ -406,10 +407,10 @@ namespace Player
 
                     }
 
-                    // Nếu media cần thêm chưa tồn tại trong playlist
+                    // Nếu media sẽ thêm chưa tồn tại trong playlist
                     if (!available)
                     {
-                        // Lấy đường dẫn của media đó
+                        // Lưu đường dẫn của media đó vào playlist
                         foreach (string item in dirMedia)
                         {
                             if (Path.GetFileName(item) == listView.FocusedItem.Text)
@@ -444,6 +445,7 @@ namespace Player
             }
             else if (type == "Playlist")  // Xử lý click phải cho lvPlaylist
             {
+                // Thêm 2 ToolStripItem : Rename, Delete
                 context.Items.AddRange(new ToolStripItem[] { iRename, iDelete });
 
                 // Đổi tên playlist
@@ -464,12 +466,11 @@ namespace Player
                                 MessageBox.Show("Please enter a name !", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 evt.CancelEdit = true;
                             }
-                            // Nếu click rename mà chưa đặt tên hoặc tên mới đã có sẵn
+                            // Nếu tên mới đã có sẵn
                             else if (evt.Label != null && !Directory.GetFiles(@"Playlist", "*.txt").Contains(@"Playlist/" + evt.Label + ".txt"))
                             {
-                                try
+                                try  // Rename
                                 {
-                                    // Rename
                                     File.Move(@"Playlist/" + listView.FocusedItem.Text + ".txt", @"Playlist/" + evt.Label + ".txt");
                                 }
                                 catch
@@ -495,7 +496,7 @@ namespace Player
             }
             else  // Xử lý click phải cho lvLocation
             {
-                context.Items.Add(iDelete);  // Thêm ToolStripItem delete
+                context.Items.Add(iDelete);  // Thêm ToolStripItem Delete
 
                 // Xóa thư mục mặc định
                 iDelete.Click += (sender, args) =>
@@ -507,7 +508,7 @@ namespace Player
                     try
                     {
                         string line = string.Empty;
-                        FileStream stream = new FileStream(@"Location.txt", FileMode.CreateNew);  // Tạo mới Location.txt
+                        FileStream stream = new FileStream(@"Location.txt", FileMode.CreateNew);  // Tạo mới file Location.txt
                         StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
 
                         foreach (string item in dirLocation)
@@ -546,6 +547,7 @@ namespace Player
             gbPlaying.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbPlaying.Text = "My Music";
             
+            // Lyric
             RichTextBox rtbLyric = new RichTextBox();
             gbPlaying.Controls.Add(rtbLyric);
             rtbLyric.Dock = DockStyle.Fill;
@@ -555,6 +557,7 @@ namespace Player
             rtbLyric.Text = "Please wait a moment ...";
             rtbLyric.Visible = false;
             
+            // Now Playing
             ListView lvPlaying = new ListView();
             gbPlaying.Controls.Add(lvPlaying);
             lvPlaying.Dock = DockStyle.Fill;
@@ -567,16 +570,18 @@ namespace Player
             
 
             // Load danh sách đang phát lên lvPlaying
-            if (!wmp.status.Contains("Play"))  // Nếu bấm nút Listen lần đầu tiên => Play tất cả các media có sẵn
+            if (!wmp.status.Contains("Play"))  // Nếu bấm menu Listen lần đầu tiên => Play tất cả các media có sẵn
             {
                 try
                 {
+                    // Đọc đường dẫn các thư mục chứa media
                     string line = string.Empty;
                     FileStream stream = new FileStream(@"Location.txt", FileMode.Open);
                     StreamReader reader = new StreamReader(stream, Encoding.UTF8);
 
                     while ((line = reader.ReadLine()) != null)
                     {
+                        // Thêm các media trong từng thư mục vào Now Playing, playlist, dirMedia
                         foreach (string item in Directory.GetFiles(line))
                         {
                             if (item.EndsWith(".mp3") || item.EndsWith(".wav") || item.EndsWith(".flac") || item.EndsWith(".mpg") || item.EndsWith(".mp4") || item.EndsWith(".mkv") || item.EndsWith(".vob"))
@@ -597,9 +602,9 @@ namespace Player
 
                 }
                 
-                wmp.currentPlaylist = playlist;
+                wmp.currentPlaylist = playlist;  // Phát
             }
-            else if(itemClicked != string.Empty)  // Hiển thị bài hát được click trong Search Result
+            else if(itemClicked != string.Empty)  // Hiển thị bài hát được click trong khung Search
             {
                 gbPlaying.Text = "Now Playing";
                 lvPlaying.Items.Add(itemClicked);
@@ -648,13 +653,13 @@ namespace Player
             // Click nút Back
             pbBack.Click += (sender, args) =>
             {
-                if (rtbLyric.Visible == true)  // Nếu đang hiển thị lyric => Ẩn rtbLyric = Hiện lvPlaying ra
+                if (rtbLyric.Visible == true)  // Nếu đang hiển thị lyric => Ẩn rtbLyric & hiện lvPlaying ra
                 {
                     rtbLyric.Visible = false;
                     rtbLyric.Text = "Please wait a moment ...";
                 }
-                else  // Trở về giao diện chính
-                    pListen.SendToBack();
+                else
+                    pListen.SendToBack();  // Trở về giao diện chính
             };
 
 
@@ -698,7 +703,7 @@ namespace Player
             // Zoom-in
             pbOpen.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Open, pbOpen, "Open your music !");
+                mouseHover(Resources.Open, pbOpen, "Open my music !");
             };
 
             // Zoom-out
@@ -773,8 +778,8 @@ namespace Player
         public void karaoke(Panel pKaraoke)
         {
             pKaraoke.BackColor = Color.Black;
-            string status = "Karaoke";
-            List<string> dirFavorite = new List<string>();
+            string status = "Karaoke";  // Result hoặc Favorite
+            List<string> dirFavorite = new List<string>();  // Lưu Title + URL các video yêu thích
 
             // Ô tìm kiếm
             TextBox txtSearch = new TextBox();
@@ -821,8 +826,10 @@ namespace Player
             lvKaraoke.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
 
 
+            // Nạp tất cả Title + URL đã lưu vào biến dirFavorite
             try
             {
+                // Đọc file Karaoke.txt
                 string line = string.Empty;
                 FileStream stream = new FileStream(@"Karaoke.txt", FileMode.Open);
                 StreamReader reader = new StreamReader(stream, Encoding.UTF8);
@@ -841,6 +848,7 @@ namespace Player
             }
 
 
+            // Nhấn enter tìm kiếm
             txtSearch.KeyDown += (sender, args) =>
             {
                 if (args.KeyCode == Keys.Enter)
@@ -857,7 +865,7 @@ namespace Player
                         MessageBox.Show("There is no Internet connection", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
-                    getURL(lvKaraoke, doc);
+                    getURL(lvKaraoke, doc);  // Load Title lên lvKaraoke + Lưu URL vào biến urlYouTube
                     gbKaraoke.Text = status = "Result";
                     flash.Visible = false;
                 }
@@ -867,23 +875,23 @@ namespace Player
             // Xử lý click chuột lên lvKaraoke
             lvKaraoke.MouseClick += (sender, args) =>
             {
-                if (args.Button == MouseButtons.Left)
+                if (args.Button == MouseButtons.Left)  // Click trái lên lvKaraoke
                 {
-                    if (gbKaraoke.Text == "Result")
+                    if (gbKaraoke.Text == "Result")  // Nếu đang tìm kiếm
                     {
-                        wmp.Ctlcontrols.stop();
-                        flash.Movie = urlYouTube[lvKaraoke.FocusedItem.Index];
+                        wmp.Ctlcontrols.stop();  // Stop wmp
+                        flash.Movie = urlYouTube[lvKaraoke.FocusedItem.Index];  // Phát title được chọn
                         flash.Visible = true;
                         gbKaraoke.Text = string.Empty;
                     }
-                    else
+                    else  // Nếu xem Favorite
                     {
                         foreach (string item in dirFavorite)
                         {
                             if (item == lvKaraoke.FocusedItem.Text)
                             {
-                                wmp.Ctlcontrols.stop();
-                                flash.Movie = dirFavorite[dirFavorite.IndexOf(item) + 1];
+                                wmp.Ctlcontrols.stop();  // Stop wmp
+                                flash.Movie = dirFavorite[dirFavorite.IndexOf(item) + 1];  // Phát title được chọn
                                 flash.Visible = true;
                                 gbKaraoke.Text = string.Empty;
                                 break;
@@ -891,19 +899,22 @@ namespace Player
                         }
                     }
                 }
-                else
+                else  // Click phải lên lvKaraoke
                 {
-                    if (gbKaraoke.Text == "Result")
+                    if (gbKaraoke.Text == "Result")  // Nếu đang tìm kiếm
                     {
+                        // Thêm ToolStripItem "Add to Favorite"
                         ContextMenuStrip context = new ContextMenuStrip();
                         ToolStripItem iFavorite = new ToolStripMenuItem("Add to Favorite");
                         context.Items.Add(iFavorite);
                         lvKaraoke.ContextMenuStrip = context;
 
+                        // Click "Add to Favorite"
                         iFavorite.Click += (obj, evt) =>
                         {
-                            bool available = false;
+                            bool available = false;  // Video cần thêm chưa tồn tại trong Favorite
 
+                            // Kiểm tra tồn tại
                             foreach (string item in dirFavorite)
                             {
                                 if (item == urlYouTube[lvKaraoke.FocusedItem.Index])
@@ -913,27 +924,29 @@ namespace Player
                                 }
                             }
 
-                            if (!available)
+                            if (!available)  // Nếu chưa tồn tại
                             {
                                 MessageBox.Show("Successfully !", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 File.AppendAllText(@"Karaoke.txt", lvKaraoke.FocusedItem.Text + Environment.NewLine + urlYouTube[lvKaraoke.FocusedItem.Index] + Environment.NewLine);
                                 dirFavorite.Add(lvKaraoke.FocusedItem.Text);
                                 dirFavorite.Add(urlYouTube[lvKaraoke.FocusedItem.Index]);
                             }
-                            else
+                            else  // Nếu đã tồn tại
                                 MessageBox.Show("The video already existed !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         };
                     }
-                    else
+                    else  // Nếu đang xem Favorite
                     {
+                        // Thêm ToolStripItem "Delete"
                         ContextMenuStrip context = new ContextMenuStrip();
                         ToolStripItem iDelete = new ToolStripMenuItem("Delete");
                         context.Items.Add(iDelete);
                         lvKaraoke.ContextMenuStrip = context;
 
+                        // Click Delete
                         iDelete.Click += (obj, evt) =>
                         {
-                            // Xóa Title + URL cần xóa
+                            // Xóa Title + URL cần xóa khỏi dirFavorite
                             foreach (string item in dirFavorite)
                             {
                                 if (item == lvKaraoke.FocusedItem.Text)
@@ -953,7 +966,7 @@ namespace Player
 
                                 foreach (string item in dirFavorite)
                                 {
-                                    writer.WriteLine(item);  // Ghi các đường dẫn Favorite đã update
+                                    writer.WriteLine(item);  // Lưu các đường dẫn từ dirFavorite đã update
                                 }
 
                                 writer.Close();
@@ -995,8 +1008,10 @@ namespace Player
             // Click nút Back
             pbBack.Click += (sender, args) =>
             {
+                // Nếu đang hiển thị player
                 if (flash.Visible)
                     flash.Visible = false;
+                // Nếu đang xem Favorite
                 else if(gbKaraoke.Text == "Favorite" && txtSearch.Text.Trim() != string.Empty)
                 {
                     HtmlWeb web = new HtmlWeb();
@@ -1014,14 +1029,14 @@ namespace Player
                     getURL(lvKaraoke, doc);
                     gbKaraoke.Text = status = "Result";
                 }
-                else
+                else  // Nếu đang tìm kiếm
                 {
                     pKaraoke.SendToBack();
                     flash.Visible = false;
                     flash.Movie = "Karaoke";
                 }
                 
-                gbKaraoke.Text = status;
+                gbKaraoke.Text = status;  // status = Result hoặc Favorite
             };
 
 
@@ -1049,6 +1064,7 @@ namespace Player
             // Click nút Player
             pbPlayer.Click += (sender, args) =>
             {
+                // Chỉ hiển thị player khi đang phát
                 if(flash.Movie != null && flash.Movie != "Karaoke")
                 {
                     flash.Visible = true;
@@ -1089,7 +1105,7 @@ namespace Player
 
                 foreach (string item in dirFavorite)
                 {
-                    if (i % 2 == 0)
+                    if (i % 2 == 0)  // i chẵn là Title + i lẻ là URL
                         lvKaraoke.Items.Add(item);
 
                     i++;
@@ -1123,7 +1139,7 @@ namespace Player
             {
                 pKaraoke.SendToBack();
                 flash.Visible = false;
-                flash.Movie = "Karaoke";
+                flash.Movie = "Karaoke";  // Stop player tạm thời
                 gbKaraoke.Text = status;
             };
         }
@@ -1157,15 +1173,16 @@ namespace Player
             lvPlaylist.ForeColor = Color.Lime;
             lvPlaylist.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
 
-            // Khung chứa danh sách các media đang phát
+            // Khung chứa danh sách các media đang phát + Lyric
             GroupBox gbPlaying = new GroupBox();
             pPlaylist.Controls.Add(gbPlaying);
             gbPlaying.Location = new Point(159, 12);
             gbPlaying.Size = new Size(295, 397);
             gbPlaying.ForeColor = Color.DeepSkyBlue;
             gbPlaying.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
-            gbPlaying.Text = "Your Music";
+            gbPlaying.Text = "My Music";
 
+            // Lyric
             RichTextBox rtbLyric = new RichTextBox();
             gbPlaying.Controls.Add(rtbLyric);
             rtbLyric.Dock = DockStyle.Fill;
@@ -1175,6 +1192,7 @@ namespace Player
             rtbLyric.Text = "Please wait a moment ...";
             rtbLyric.Visible = false;
 
+            // Now Playing
             ListView lvPlaying = new ListView();
             gbPlaying.Controls.Add(lvPlaying);
             lvPlaying.Dock = DockStyle.Fill;
@@ -1194,7 +1212,7 @@ namespace Player
                     if (Path.GetFileNameWithoutExtension(item) != string.Empty)
                         lvPlaylist.Items.Add(Path.GetFileNameWithoutExtension(item));
                     else
-                        File.Delete(item);
+                        File.Delete(item);  // Nếu playlist không có tên => Xóa
                 }
             }
             catch
@@ -1210,11 +1228,11 @@ namespace Player
                 {
                     lvPlaying.Clear();
                     gbPlaying.Text = lvPlaylist.FocusedItem.Text;
-                    leftClick(lvPlaylist, "Playlist");
+                    leftClick(lvPlaylist, "Playlist");  // Thực thi leftClick
                     playlist.clear();
                     rtbLyric.Visible = false;
                     rtbLyric.Text = "Please wait a moment ...";
-                    dirPlaylist = lvPlaylist.FocusedItem.Text;
+                    dirPlaylist = lvPlaylist.FocusedItem.Text;  // Lưu đường dẫn playlist được chọn
                     itemClicked = string.Empty;
                     found = false;
 
@@ -1229,7 +1247,7 @@ namespace Player
 
                     wmp.currentPlaylist = playlist;
                 }
-                else  // Click phải (Xóa playlist được chọn)
+                else  // Click phải (Rename + Delete)
                     rightClick(lvPlaylist, rtbLyric, "Playlist");
             };
 
@@ -1239,7 +1257,7 @@ namespace Player
             {
                 if (args.Button == MouseButtons.Left)  // Click trái => Play media được chọn
                     leftClick(lvPlaying, "Now Playing");
-                else  // Click phải => Xem lyric, property, xóa
+                else  // Click phải (Lyric, Delete, Add to, Property
                     rightClick(lvPlaying, rtbLyric, "Now Playing");
             };
 
@@ -1475,17 +1493,17 @@ namespace Player
             lvSearch.ForeColor = Color.Black;
             lvSearch.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
 
-
-            // Load tất cả các thư mục mặc định chứa media lên lvLocation
-            try
+            
+            try  // Load tất cả các thư mục mặc định chứa media lên lvLocation
             {
+                // Đọc file Location.txt
                 string line = string.Empty;
                 FileStream stream = new FileStream(@"Location.txt", FileMode.Open);
                 StreamReader reader = new StreamReader(stream, Encoding.UTF8);
 
                 while ((line = reader.ReadLine()) != null)
                 {
-                    lvLocation.Items.Add(line);
+                    lvLocation.Items.Add(line);  // Hiển thị đường dẫn thư mục lên lvLocation
                     dirLocation.Add(line);  // Lưu tất cả các đường dẫn thư mục chứa media vào dirLocation
                 }
 
@@ -1501,9 +1519,9 @@ namespace Player
             // Hiển thị kết quả tìm kiếm lên lvSearch khi gõ từ khóa
             txtSearch.TextChanged += (sender, args) =>
             {
-                if (lvLocation.Items.Count == 0)  // Yêu cầu chọn thư mục chứa các media cần tìm
+                if (lvLocation.Items.Count == 0)  // Nếu chưa chọn thư mục mặc định
                     MessageBox.Show("Please choose where to look !", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                else
+                else  // Nếu đã chọn thư mục mặc định
                 {
                     lvSearch.Clear();
                     gbSearch.Text = "Result";
@@ -1512,17 +1530,17 @@ namespace Player
                     dirMedia.Clear();
                     found = false;
 
-                    // Duyệt tất cả đường dẫn thư mục mặc định trong dirLocation
+                    // Duyệt tất cả thư mục trong dirLocation
                     foreach (string dir in dirLocation)
                     {
-                        foreach (string item in Directory.GetFiles(dir))  // Lấy tất cả các file là media trong từng thư mục mặc định
+                        foreach (string item in Directory.GetFiles(dir))  // Lấy tất cả các file là media trong từng thư mục
                         {
                             if (item.EndsWith(".mp3") || item.EndsWith(".wav") || item.EndsWith(".flac") || item.EndsWith(".mpg") || item.EndsWith(".mp4") || item.EndsWith(".mkv") || item.EndsWith(".vob"))
                                 dirMedia.Add(item);  // Lưu tất cả đường dẫn media dùng cho tìm kiếm
                         }
                     }
 
-                    // Nếu từ khóa trong ô rtbSearch phù hợp => Hiển thị các media liên quan lên lvSearch
+                    // Nếu từ khóa trong ô rtbSearch phù hợp => Hiển thị lên lvSearch
                     foreach (string item in dirMedia)
                     {
                         // Kiểm tra từ khóa tìm kiếm hợp lệ hay không
@@ -1546,9 +1564,9 @@ namespace Player
                 if (args.Button == MouseButtons.Left)  // Click trái => Hiển thị các media trong thư mục được chọn
                 {
                     lvSearch.Clear();
-                    gbSearch.Text = Path.GetFileName(lvLocation.FocusedItem.Text);
-                    leftClick(lvLocation, "Location");
-                    playlist.clear();
+                    gbSearch.Text = Path.GetFileName(lvLocation.FocusedItem.Text);  // Hiển thị tên thư mục được chọn lên lvSearch
+                    leftClick(lvLocation, "Location");  // Thực thi leftClick
+                    playlist.clear();  // Clear playlist cũ
                     rtbLyric.Visible = false;
                     rtbLyric.Text = "Please wait a moment ...";
                     itemClicked = string.Empty;
@@ -1564,7 +1582,7 @@ namespace Player
 
                     wmp.currentPlaylist = playlist;
                 }
-                else  // Click phải => Xóa thư mục mặc định được chọn
+                else  // Click phải => Xóa thư mục được chọn
                     rightClick(lvLocation, rtbLyric, "Location");
             };
             
@@ -1574,7 +1592,7 @@ namespace Player
             {
                 if (args.Button == MouseButtons.Left)  // Click trái => Phát media được chọn
                     leftClick(lvSearch, "Now Playing");
-                else  // Click phải => Xem lyric, property, xóa
+                else  // Click phải (Lyric, Delete, Add to, Property)
                     rightClick(lvSearch, rtbLyric, "Now Playing");
             };
 
@@ -1668,7 +1686,7 @@ namespace Player
                 bool avaiable = false;
                 FolderBrowserDialog fbd = new FolderBrowserDialog();
 
-                try  // try/catch => Tránh lỗi thoát Dialog
+                try  // try-catch => Tránh lỗi thoát Dialog mà không chọn
                 {
                     if (fbd.ShowDialog() == DialogResult.OK)
                     {

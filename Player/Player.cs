@@ -12,10 +12,11 @@ namespace Player
         Media obj = new Media();
         AxWMPLib.AxWindowsMediaPlayer wmp = new AxWMPLib.AxWindowsMediaPlayer();
 
+        // 5 panel Listen, Karaoke, Playlist, Search, Power
         Panel pListen = new Panel();
+        Panel pKaraoke = new Panel();
         Panel pPlaylist = new Panel();
         Panel pSearch = new Panel();
-        Panel pKaraoke = new Panel();
         Panel pPower = new Panel();
 
 
@@ -24,6 +25,7 @@ namespace Player
 
         public Player()
         {
+            // Giải quyết nháy hình
             this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
@@ -62,7 +64,7 @@ namespace Player
             // Click nút Shuttle
             pbShuffle.Click += (sender, args) =>
             {
-                if (!obj.shuffle)
+                if (!obj.shuffle)  // Nếu chưa bật shuffle => Zoom-in + Bật shuffle
                 {
                     Bitmap bmp = new Bitmap(Resources.Shuffle.Width + 1, Resources.Shuffle.Height + 1);
                     Graphics g = Graphics.FromImage(bmp);
@@ -72,7 +74,7 @@ namespace Player
                     wmp.settings.setMode("shuffle", true);
                     obj.shuffle = true;
                 }
-                else
+                else  // Nếu đã bật shuffle => Zoom-out + Tắt shuffle
                 {
                     pbShuffle.Image = Resources.Shuffle;
                     wmp.settings.setMode("shuffle", false);
@@ -109,7 +111,7 @@ namespace Player
             // Click nút Repeat
             pbRepeat.Click += (sender, args) =>
             {
-                if (!obj.repeat)
+                if (!obj.repeat)  // Nếu chưa bật repeat => Zoom-in + Bật repeat
                 {
                     Bitmap bmp = new Bitmap(Resources.Repeat.Width + 1, Resources.Repeat.Height + 1);
                     Graphics g = Graphics.FromImage(bmp);
@@ -119,7 +121,7 @@ namespace Player
                     wmp.settings.setMode("loop", true);
                     obj.repeat = true;
                 }
-                else
+                else  // Nếu đã bật repeat => Zoom-out + Tắt repeat
                 {
                     pbRepeat.Image = Resources.Repeat;
                     wmp.settings.setMode("loop", false);
@@ -155,7 +157,7 @@ namespace Player
             // Click nút Return
             pbReturn.Click += (sender, args) =>
             {
-                wmp.SendToBack();
+                wmp.SendToBack();  // Ẩn wmp
             };
         }
 
