@@ -37,21 +37,21 @@
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Times New Roman", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.ForeColor = System.Drawing.Color.Lime;
-            this.lblTitle.Location = new System.Drawing.Point(96, 18);
+            this.lblTitle.Font = new System.Drawing.Font("Times New Roman", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.ForeColor = System.Drawing.Color.DeepSkyBlue;
+            this.lblTitle.Location = new System.Drawing.Point(95, 20);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(105, 32);
+            this.lblTitle.Size = new System.Drawing.Size(122, 38);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Playlist";
             // 
             // txtName
             // 
-            this.txtName.Font = new System.Drawing.Font("Times New Roman", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtName.ForeColor = System.Drawing.Color.Blue;
-            this.txtName.Location = new System.Drawing.Point(20, 60);
+            this.txtName.Font = new System.Drawing.Font("Times New Roman", 13.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtName.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.txtName.Location = new System.Drawing.Point(27, 76);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(266, 36);
+            this.txtName.Size = new System.Drawing.Size(266, 33);
             this.txtName.TabIndex = 1;
             this.txtName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtName_KeyDown);
             // 
@@ -60,9 +60,9 @@
             this.btnOK.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.Font = new System.Drawing.Font("Times New Roman", 13.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOK.Location = new System.Drawing.Point(42, 111);
+            this.btnOK.Location = new System.Drawing.Point(41, 124);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(105, 40);
+            this.btnOK.Size = new System.Drawing.Size(115, 43);
             this.btnOK.TabIndex = 2;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = false;
@@ -73,9 +73,9 @@
             this.btnCancel.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Font = new System.Drawing.Font("Times New Roman", 13.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(158, 111);
+            this.btnCancel.Location = new System.Drawing.Point(162, 124);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(105, 40);
+            this.btnCancel.Size = new System.Drawing.Size(115, 43);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Exit";
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -85,8 +85,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(307, 185);
+            this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.ClientSize = new System.Drawing.Size(322, 202);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.txtName);

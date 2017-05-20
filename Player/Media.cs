@@ -31,7 +31,10 @@ namespace Player
         
         bool found = false;  // Kết quả tìm kiếm media
         string itemClicked = string.Empty;  // Lấy tên media được click trong Search Result
-        
+
+        bool shuffle = false;
+        bool repeat = false;
+
         ToolTip tip = new ToolTip();
 
 
@@ -175,9 +178,6 @@ namespace Player
         {
             if (type == "Now Playing")  // Xử lý click trái cho lvPlaying => Update dirMedia
             {
-                // Tạo playlist mới
-                WMPLib.IWMPPlaylist playlist = wmp.newPlaylist(string.Empty, string.Empty);
-
                 for(int i = 0; i < dirMedia.Count; i++)
                 {
                     // Nếu media được chọn = media[i]
@@ -191,6 +191,8 @@ namespace Player
                         }
                         else  // Nếu media[i] nằm trong danh sách phát
                         {
+                            wmp.settings.setMode("shuffle", false);
+                            WMPLib.IWMPPlaylist playlist = wmp.newPlaylist(string.Empty, string.Empty);
                             playlist.appendItem(wmp.newMedia(dirMedia[i]));  // Thêm media[i] vào playlist
                             
                             // Thêm các media đứng sau media[i] vào playlist
@@ -199,7 +201,23 @@ namespace Player
                                 playlist.appendItem(wmp.newMedia(dirMedia[j]));
                             }
 
+                            // Nếu media[i] != media[0] => Thêm các media đứng trước media[i] vào playlist
+                            if(i != 0)
+                            {
+                                for(int k = 0; k < i; k++)
+                                {
+                                    playlist.appendItem(wmp.newMedia(dirMedia[k]));
+                                }
+                            }
+
                             wmp.currentPlaylist = playlist;
+
+                            if(shuffle)
+                                wmp.settings.setMode("shuffle", true);
+
+                            if(repeat)
+                                wmp.settings.setMode("loop", true);
+
                             break;
                         }
                     }
