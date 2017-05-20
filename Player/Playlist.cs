@@ -18,7 +18,7 @@ namespace Player
         private void btnOK_Click(object sender, EventArgs e)
         {
             if (txtName.Text == "")
-                message = "Untitled Playlist";
+                message = "Untitled";
             else
                 message = txtName.Text;
         }

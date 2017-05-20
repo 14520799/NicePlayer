@@ -1181,7 +1181,7 @@ namespace Player
             gbPlaying.ForeColor = Color.DeepSkyBlue;
             gbPlaying.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbPlaying.Text = "My Music";
-
+            
             // Lyric
             RichTextBox rtbLyric = new RichTextBox();
             gbPlaying.Controls.Add(rtbLyric);

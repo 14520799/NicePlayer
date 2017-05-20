@@ -36,4 +36,3 @@ C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.Properties.Reso
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.csproj.GenerateResource.Cache
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.exe
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.pdb
-C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache

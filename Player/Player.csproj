@@ -157,9 +157,6 @@
     <None Include="Resources\PlayingWall.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Karaoke.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Playlist.png" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +188,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shuffle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Karaoke.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -66,11 +66,11 @@
             // 
             this.pbKaraoke.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.pbKaraoke.BackColor = System.Drawing.Color.Transparent;
-            this.pbKaraoke.Image = global::Player.Properties.Resources.Karaoke;
+            this.pbKaraoke.Image = ((System.Drawing.Image)(resources.GetObject("pbKaraoke.Image")));
             this.pbKaraoke.InitialImage = null;
-            this.pbKaraoke.Location = new System.Drawing.Point(160, 321);
+            this.pbKaraoke.Location = new System.Drawing.Point(162, 316);
             this.pbKaraoke.Name = "pbKaraoke";
-            this.pbKaraoke.Size = new System.Drawing.Size(135, 135);
+            this.pbKaraoke.Size = new System.Drawing.Size(160, 160);
             this.pbKaraoke.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbKaraoke.TabIndex = 5;
             this.pbKaraoke.TabStop = false;
@@ -100,7 +100,7 @@
             this.pbPlaylist.BackColor = System.Drawing.Color.Transparent;
             this.pbPlaylist.Image = global::Player.Properties.Resources.Playlist;
             this.pbPlaylist.InitialImage = null;
-            this.pbPlaylist.Location = new System.Drawing.Point(335, 326);
+            this.pbPlaylist.Location = new System.Drawing.Point(354, 326);
             this.pbPlaylist.Name = "pbPlaylist";
             this.pbPlaylist.Size = new System.Drawing.Size(135, 135);
             this.pbPlaylist.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -116,7 +116,7 @@
             this.pbSearch.BackColor = System.Drawing.Color.Transparent;
             this.pbSearch.Image = global::Player.Properties.Resources.Search;
             this.pbSearch.InitialImage = null;
-            this.pbSearch.Location = new System.Drawing.Point(490, 324);
+            this.pbSearch.Location = new System.Drawing.Point(499, 323);
             this.pbSearch.Name = "pbSearch";
             this.pbSearch.Size = new System.Drawing.Size(135, 135);
             this.pbSearch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
