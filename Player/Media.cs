@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -430,19 +431,39 @@ namespace Player
                 // Đổi tên playlist
                 iRename.Click += (sender, args) =>
                 {
-                    listView.LabelEdit = true;
-                    listView.FocusedItem.BeginEdit();
+                    bool loop = false;  // Giải quyết lỗi AfterLabelEdit
+                    listView.LabelEdit = true;  // Cho phép rename
+                    listView.FocusedItem.BeginEdit();  // Bắt đầu rename
                     
+                    // Sau khi rename
                     listView.AfterLabelEdit += (obj, evt) =>
                     {
-                        try
+                        if (!loop)  // Nếu loop = false <=> Chưa có lỗi loop
                         {
-                            File.Move(@"Playlist/" + listView.FocusedItem.Text + ".txt", evt.Label);
+                            // Nếu tên mới rỗng
+                            if (evt.Label == string.Empty)
+                            {
+                                MessageBox.Show("Please enter a name !", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                evt.CancelEdit = true;
+                            }
+                            // Nếu click rename mà chưa đặt tên hoặc tên mới đã có sẵn
+                            else if (evt.Label != null && !Directory.GetFiles(@"Playlist", "*.txt").Contains(@"Playlist/" + evt.Label + ".txt"))
+                            {
+                                try
+                                {
+                                    // Rename
+                                    File.Move(@"Playlist/" + listView.FocusedItem.Text + ".txt", @"Playlist/" + evt.Label + ".txt");
+                                }
+                                catch
+                                {
+                                    // Thông báo lỗi nếu không thể rename
+                                    MessageBox.Show("The name already existed !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    evt.CancelEdit = true;
+                                }
+                            }
                         }
-                        catch
-                        {
-                            MessageBox.Show("The name already existed !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+
+                        loop = true;
                     };
                 };
 

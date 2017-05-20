@@ -36,7 +36,7 @@ namespace Player
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
             InitializeComponent();
-            
+
             obj.wmp = wmp;
             this.Controls.Add(wmp);
             wmp.Dock = DockStyle.Fill;
