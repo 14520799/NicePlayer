@@ -671,7 +671,7 @@ namespace Player
             // Nút Open
             PictureBox pbOpen = new PictureBox();
             pListen.Controls.Add(pbOpen);
-            pbOpen.Location = new Point(465, 212);
+            pbOpen.Location = new Point(465, 213);
             pbOpen.Size = new Size(85, 85);
             pbOpen.SizeMode = PictureBoxSizeMode.CenterImage;
             pbOpen.BackColor = Color.Transparent;
@@ -1010,22 +1010,22 @@ namespace Player
             // Nút Player
             PictureBox pbPlayer = new PictureBox();
             pKaraoke.Controls.Add(pbPlayer);
-            pbPlayer.Location = new Point(475, 114);
+            pbPlayer.Location = new Point(468, 123);
             pbPlayer.Size = new Size(85, 85);
             pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
-            pbPlayer.Image = Resources.Player;
+            pbPlayer.Image = Resources.YouTube;
 
             // Zoom-in
             pbPlayer.MouseHover += (sender, args) =>
             {
-                mouseHover(Resources.Player, pbPlayer, "Player");
+                mouseHover(Resources.YouTube, pbPlayer, "Player");
             };
 
             // Zoom-out
             pbPlayer.MouseLeave += (sender, args) =>
             {
-                mouseLeave(Resources.Player, pbPlayer);
+                mouseLeave(Resources.YouTube, pbPlayer);
             };
 
             // Click nút Player
@@ -1042,7 +1042,7 @@ namespace Player
             // Nút Favorite
             PictureBox pbFavorite = new PictureBox();
             pKaraoke.Controls.Add(pbFavorite);
-            pbFavorite.Location = new Point(468, 216);
+            pbFavorite.Location = new Point(468, 217);
             pbFavorite.Size = new Size(85, 85);
             pbFavorite.SizeMode = PictureBoxSizeMode.CenterImage;
             pbFavorite.BackColor = Color.Transparent;
@@ -1263,7 +1263,7 @@ namespace Player
             // Nút Player
             PictureBox pbPlayer = new PictureBox();
             pPlaylist.Controls.Add(pbPlayer);
-            pbPlayer.Location = new Point(475, 116);
+            pbPlayer.Location = new Point(474, 114);
             pbPlayer.Size = new Size(85, 85);
             pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
@@ -1291,7 +1291,7 @@ namespace Player
             // Nút NewPlaylist
             PictureBox pbNewPlaylist = new PictureBox();
             pPlaylist.Controls.Add(pbNewPlaylist);
-            pbNewPlaylist.Location = new Point(467, 215);
+            pbNewPlaylist.Location = new Point(467, 214);
             pbNewPlaylist.Size = new Size(85, 85);
             pbNewPlaylist.SizeMode = PictureBoxSizeMode.CenterImage;
             pbNewPlaylist.BackColor = Color.Transparent;
@@ -1768,7 +1768,7 @@ namespace Player
             gbTimer.Controls.Add(lblTitle);
             lblTitle.Location = new Point(119, 46);
             lblTitle.Width = 250;
-            lblTitle.ForeColor = Color.Blue;
+            lblTitle.ForeColor = Color.DeepSkyBlue;
             lblTitle.Font = new Font("Lucida Bright", 24, FontStyle.Bold, GraphicsUnit.Pixel);
             lblTitle.Text = "Select Your Timer";
 
@@ -2013,7 +2013,7 @@ namespace Player
             // Nút Player
             PictureBox pbPlayer = new PictureBox();
             pPower.Controls.Add(pbPlayer);
-            pbPlayer.Location = new Point(476, 205);
+            pbPlayer.Location = new Point(476, 204);
             pbPlayer.Size = new Size(85, 85);
             pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
