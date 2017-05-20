@@ -23,7 +23,7 @@ namespace Player
         public static extern bool ExitWindowsEx(uint flags, uint reason);
         
         public AxWMPLib.AxWindowsMediaPlayer wmp = new AxWMPLib.AxWindowsMediaPlayer();
-
+        
         string dirPlaylist = string.Empty;  // Lưu tên playlist đang phát
         List<string> dirMedia = new List<string>();  // Lưu danh sách đường dẫn các media đang phát
         List<string> urlYouTube = new List<string>();  // Lưu danh sách URL từ YouTube dựa vào keyword (Dùng cho Karaoke)
@@ -781,7 +781,7 @@ namespace Player
             gbKaraoke.Size = new Size(454, 349);
             gbKaraoke.ForeColor = Color.DeepSkyBlue;
             gbKaraoke.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
-            gbKaraoke.Text = status;
+            gbKaraoke.Text = "Karaoke";
 
             AxShockwaveFlashObjects.AxShockwaveFlash flash = new AxShockwaveFlashObjects.AxShockwaveFlash();
             gbKaraoke.Controls.Add(flash);
@@ -840,7 +840,7 @@ namespace Player
                     }
 
                     getURL(lvKaraoke, doc);
-                    gbKaraoke.Text = status = "Search Result";
+                    gbKaraoke.Text = status = "Result";
                     flash.Visible = false;
                 }
             };
@@ -851,12 +851,12 @@ namespace Player
             {
                 if (args.Button == MouseButtons.Left)
                 {
-                    if (status == "Search Result")
+                    if (gbKaraoke.Text == "Result")
                     {
                         wmp.Ctlcontrols.stop();
                         flash.Movie = urlYouTube[lvKaraoke.FocusedItem.Index];
                         flash.Visible = true;
-                        gbKaraoke.Text = lvKaraoke.FocusedItem.Text;
+                        gbKaraoke.Text = string.Empty;
                     }
                     else
                     {
@@ -867,14 +867,15 @@ namespace Player
                                 wmp.Ctlcontrols.stop();
                                 flash.Movie = dirFavorite[dirFavorite.IndexOf(item) + 1];
                                 flash.Visible = true;
-                                gbKaraoke.Text = lvKaraoke.FocusedItem.Text;
+                                gbKaraoke.Text = string.Empty;
+                                break;
                             }
                         }
                     }
                 }
                 else
                 {
-                    if (status == "Search Result")
+                    if (gbKaraoke.Text == "Result")
                     {
                         ContextMenuStrip context = new ContextMenuStrip();
                         ToolStripItem iFavorite = new ToolStripMenuItem("Add to Favorite");
@@ -978,9 +979,30 @@ namespace Player
             {
                 if (flash.Visible)
                     flash.Visible = false;
-                else
-                    pKaraoke.SendToBack();
+                else if(gbKaraoke.Text == "Favorite" && txtSearch.Text.Trim() != string.Empty)
+                {
+                    HtmlWeb web = new HtmlWeb();
+                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
 
+                    try
+                    {
+                        doc = web.Load("https://www.youtube.com/results?search_query=" + ("karaoke " + txtSearch.Text).Replace(" ", "+"));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("There is no Internet connection", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    getURL(lvKaraoke, doc);
+                    gbKaraoke.Text = status = "Result";
+                }
+                else
+                {
+                    pKaraoke.SendToBack();
+                    flash.Visible = false;
+                    flash.Movie = "Karaoke";
+                }
+                
                 gbKaraoke.Text = status;
             };
 
@@ -1009,7 +1031,11 @@ namespace Player
             // Click nút Player
             pbPlayer.Click += (sender, args) =>
             {
-                flash.Visible = true;
+                if(flash.Movie != null && flash.Movie != "Karaoke")
+                {
+                    flash.Visible = true;
+                    gbKaraoke.Text = string.Empty;
+                }
             };
 
 
@@ -1037,10 +1063,11 @@ namespace Player
             // Click nút Favorite
             pbFavorite.Click += (sender, args) =>
             {
-                int i = 0;
                 lvKaraoke.Clear();
                 flash.Visible = false;
                 gbKaraoke.Text = status = "Favorite";
+
+                int i = 0;
 
                 foreach (string item in dirFavorite)
                 {
@@ -1077,6 +1104,8 @@ namespace Player
             pbHome.Click += (sender, args) =>
             {
                 pKaraoke.SendToBack();
+                flash.Visible = false;
+                flash.Movie = "Karaoke";
                 gbKaraoke.Text = status;
             };
         }
