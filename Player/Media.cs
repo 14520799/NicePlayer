@@ -1417,7 +1417,7 @@ namespace Player
             gbLocation.Size = new Size(160, 347);
             gbLocation.ForeColor = Color.DeepSkyBlue;
             gbLocation.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
-            gbLocation.Text = "Music Folder";
+            gbLocation.Text = "Location";
 
             ListView lvLocation = new ListView();
             gbLocation.Controls.Add(lvLocation);
@@ -1436,7 +1436,7 @@ namespace Player
             gbSearch.Size = new Size(296, 347);
             gbSearch.ForeColor = Color.DeepSkyBlue;
             gbSearch.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
-            gbSearch.Text = "Search Result";
+            gbSearch.Text = "Search";
 
             RichTextBox rtbLyric = new RichTextBox();
             gbSearch.Controls.Add(rtbLyric);
@@ -1488,7 +1488,7 @@ namespace Player
                 else
                 {
                     lvSearch.Clear();
-                    gbSearch.Text = "Search Result";
+                    gbSearch.Text = "Result";
                     rtbLyric.Visible = false;
                     rtbLyric.Text = "Please wait a moment ...";
                     dirMedia.Clear();
@@ -1590,7 +1590,7 @@ namespace Player
                     rtbLyric.Visible = false;
                     rtbLyric.Text = "Please wait a moment ...";
                 }
-                else if(gbSearch.Text == "Search Result")  // Nếu đang hiển thị kết quả tìm kiếm => Xóa
+                else if(gbSearch.Text == "Result")  // Nếu đang hiển thị kết quả tìm kiếm => Xóa
                 {
                     pSearch.SendToBack();
                     txtSearch.Text = string.Empty;
@@ -1664,7 +1664,7 @@ namespace Player
                         {
                             if (item == fbd.SelectedPath)  // Nếu thư mục đang chọn đã tồn tại => Cảnh báo
                             {
-                                MessageBox.Show("The folder you selected already existed !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("The path you selected already existed !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 avaiable = true;
                                 break;
                             }
@@ -1695,7 +1695,7 @@ namespace Player
                             dirLocation.Add(fbd.SelectedPath);
                         }
                         else  // Thông báo thư mục không có media
-                            MessageBox.Show("The folder doesn't contain media files !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("The path doesn't contain media files !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 catch
@@ -1734,7 +1734,7 @@ namespace Player
                 rtbLyric.Text = "Please wait a moment ...";
 
                 // Xóa từ khóa và kết quả tìm kiếm
-                if (gbSearch.Text == "Search Result")
+                if (gbSearch.Text == "Result")
                 {
                     txtSearch.Text = string.Empty;
                     lvSearch.Clear();
