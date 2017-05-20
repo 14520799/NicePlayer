@@ -34,26 +34,29 @@ namespace Player
             wmp.Dock = DockStyle.Fill;
 
 
-            /*// Nút Shuffle
+            // Nút Shuffle
             PictureBox pbShuffle = new PictureBox();
             wmp.Controls.Add(pbShuffle);
-            pbShuffle.Location = new Point(479, 379);
-            pbShuffle.Size = new Size(30, 30);
-            pbShuffle.SizeMode = PictureBoxSizeMode.CenterImage;
+            pbShuffle.Location = new Point(477, 377);
+            pbShuffle.Size = new Size(32, 30);
             pbShuffle.BackColor = Color.Transparent;
             pbShuffle.Image = Resources.Shuffle;
+            pbShuffle.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbShuffle.MouseHover += (sender, args) =>
             {
-                obj.mouseHover(Resources.Shuffle, pbShuffle, "Shuffle");
+                Bitmap bmp = new Bitmap(Resources.Shuffle.Width + 1, Resources.Shuffle.Height + 1);
+                Graphics g = Graphics.FromImage(bmp);
+                g.DrawImage(Resources.Shuffle, new Rectangle(Point.Empty, bmp.Size));
+                pbShuffle.Image = bmp;
             };
 
             // Zoom-out
             pbShuffle.MouseLeave += (sender, args) =>
             {
                 if (!obj.shuffle)
-                    obj.mouseLeave(Resources.Shuffle, pbShuffle);
+                    pbShuffle.Image = Resources.Shuffle;
             };
 
             // Click nút Shuttle
@@ -61,13 +64,17 @@ namespace Player
             {
                 if (!obj.shuffle)
                 {
-                    obj.mouseHover(Resources.Shuffle, pbShuffle, "Shuffle");
+                    Bitmap bmp = new Bitmap(Resources.Shuffle.Width + 1, Resources.Shuffle.Height + 1);
+                    Graphics g = Graphics.FromImage(bmp);
+                    g.DrawImage(Resources.Shuffle, new Rectangle(Point.Empty, bmp.Size));
+                    pbShuffle.Image = bmp;
+
                     wmp.settings.setMode("shuffle", true);
                     obj.shuffle = true;
                 }
                 else
                 {
-                    obj.mouseLeave(Resources.Shuffle, pbShuffle);
+                    pbShuffle.Image = Resources.Shuffle;
                     wmp.settings.setMode("shuffle", false);
                     obj.shuffle = false;
                 }
@@ -77,23 +84,26 @@ namespace Player
             // Nút Repeat
             PictureBox pbRepeat = new PictureBox();
             wmp.Controls.Add(pbRepeat);
-            pbRepeat.Location = new Point(505, 379);
-            pbRepeat.Size = new Size(30, 30);
-            pbRepeat.SizeMode = PictureBoxSizeMode.CenterImage;
+            pbRepeat.Location = new Point(507, 377);
+            pbRepeat.Size = new Size(32, 30);
             pbRepeat.BackColor = Color.Transparent;
             pbRepeat.Image = Resources.Repeat;
+            pbRepeat.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbRepeat.MouseHover += (sender, args) =>
             {
-                obj.mouseHover(Resources.Repeat, pbRepeat, "Repeat");
+                Bitmap bmp = new Bitmap(Resources.Repeat.Width + 1, Resources.Repeat.Height + 1);
+                Graphics g = Graphics.FromImage(bmp);
+                g.DrawImage(Resources.Repeat, new Rectangle(Point.Empty, bmp.Size));
+                pbRepeat.Image = bmp;
             };
 
             // Zoom-out
             pbRepeat.MouseLeave += (sender, args) =>
             {
                 if (!obj.repeat)
-                    obj.mouseLeave(Resources.Repeat, pbRepeat);
+                    pbRepeat.Image = Resources.Repeat;
             };
 
             // Click nút Repeat
@@ -101,17 +111,21 @@ namespace Player
             {
                 if (!obj.repeat)
                 {
-                    obj.mouseHover(Resources.Repeat, pbRepeat, "Repeat");
+                    Bitmap bmp = new Bitmap(Resources.Repeat.Width + 1, Resources.Repeat.Height + 1);
+                    Graphics g = Graphics.FromImage(bmp);
+                    g.DrawImage(Resources.Repeat, new Rectangle(Point.Empty, bmp.Size));
+                    pbRepeat.Image = bmp;
+
                     wmp.settings.setMode("loop", true);
                     obj.repeat = true;
                 }
                 else
                 {
-                    obj.mouseLeave(Resources.Repeat, pbRepeat);
+                    pbRepeat.Image = Resources.Repeat;
                     wmp.settings.setMode("loop", false);
                     obj.repeat = false;
                 }
-            };*/
+            };
 
 
             // Nút Return
@@ -119,21 +133,23 @@ namespace Player
             wmp.Controls.Add(pbReturn);
             pbReturn.Location = new Point(539, 377);
             pbReturn.Size = new Size(26, 30);
-            pbReturn.SizeMode = PictureBoxSizeMode.CenterImage;
             pbReturn.BackColor = Color.Transparent;
             pbReturn.Image = Resources.Return;
+            pbReturn.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbReturn.MouseHover += (sender, args) =>
             {
-                obj.mouseHover(Resources.Return, pbReturn, "Return");
+                Bitmap bmp = new Bitmap(Resources.Return.Width + 1, Resources.Return.Height + 1);
+                Graphics g = Graphics.FromImage(bmp);
+                g.DrawImage(Resources.Return, new Rectangle(Point.Empty, bmp.Size));
+                pbReturn.Image = bmp;
             };
 
             // Zoom-out
             pbReturn.MouseLeave += (sender, args) =>
             {
-                
-                obj.mouseLeave(Resources.Return, pbReturn);
+                pbReturn.Image = Resources.Return;
             };
 
             // Click nút Return

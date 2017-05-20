@@ -629,9 +629,9 @@ namespace Player
             pListen.Controls.Add(pbBack);
             pbBack.Location = new Point(468, 28);
             pbBack.Size = new Size(85, 85);
-            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
             pbBack.BackColor = Color.Transparent;
             pbBack.Image = Resources.Back;
+            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbBack.MouseHover += (sender, args) =>
@@ -663,10 +663,10 @@ namespace Player
             pListen.Controls.Add(pbPlayer);
             pbPlayer.Location = new Point(475, 112);
             pbPlayer.Size = new Size(85, 85);
-            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
             pbPlayer.Image = Resources.Player;
-            
+            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
+
             // Zoom-in
             pbPlayer.MouseHover += (sender, args) =>
             {
@@ -691,9 +691,9 @@ namespace Player
             pListen.Controls.Add(pbOpen);
             pbOpen.Location = new Point(465, 213);
             pbOpen.Size = new Size(85, 85);
-            pbOpen.SizeMode = PictureBoxSizeMode.CenterImage;
             pbOpen.BackColor = Color.Transparent;
             pbOpen.Image = Resources.Open;
+            pbOpen.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbOpen.MouseHover += (sender, args) =>
@@ -741,9 +741,9 @@ namespace Player
             pListen.Controls.Add(pbHome);
             pbHome.Location = new Point(468, 303);
             pbHome.Size = new Size(85, 85);
-            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
             pbHome.BackColor = Color.Transparent;
             pbHome.Image = Resources.Home;
+            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbHome.MouseHover += (sender, args) =>
@@ -976,9 +976,9 @@ namespace Player
             pKaraoke.Controls.Add(pbBack);
             pbBack.Location = new Point(466, 28);
             pbBack.Size = new Size(85, 85);
-            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
             pbBack.BackColor = Color.Transparent;
             pbBack.Image = Resources.Back;
+            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbBack.MouseHover += (sender, args) =>
@@ -1030,9 +1030,9 @@ namespace Player
             pKaraoke.Controls.Add(pbPlayer);
             pbPlayer.Location = new Point(468, 123);
             pbPlayer.Size = new Size(85, 85);
-            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
             pbPlayer.Image = Resources.YouTube;
+            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbPlayer.MouseHover += (sender, args) =>
@@ -1062,9 +1062,9 @@ namespace Player
             pKaraoke.Controls.Add(pbFavorite);
             pbFavorite.Location = new Point(468, 217);
             pbFavorite.Size = new Size(85, 85);
-            pbFavorite.SizeMode = PictureBoxSizeMode.CenterImage;
             pbFavorite.BackColor = Color.Transparent;
             pbFavorite.Image = Resources.Favorite;
+            pbFavorite.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbFavorite.MouseHover += (sender, args) =>
@@ -1102,9 +1102,9 @@ namespace Player
             pKaraoke.Controls.Add(pbHome);
             pbHome.Location = new Point(468, 303);
             pbHome.Size = new Size(85, 85);
-            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
             pbHome.BackColor = Color.Transparent;
             pbHome.Image = Resources.Home;
+            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbHome.MouseHover += (sender, args) =>
@@ -1249,9 +1249,9 @@ namespace Player
             pPlaylist.Controls.Add(pbBack);
             pbBack.Location = new Point(467, 28);
             pbBack.Size = new Size(85, 85);
-            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
             pbBack.BackColor = Color.Transparent;
             pbBack.Image = Resources.Back;
+            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbBack.MouseHover += (sender, args) =>
@@ -1283,9 +1283,9 @@ namespace Player
             pPlaylist.Controls.Add(pbPlayer);
             pbPlayer.Location = new Point(474, 114);
             pbPlayer.Size = new Size(85, 85);
-            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
             pbPlayer.Image = Resources.Player;
+            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbPlayer.MouseHover += (sender, args) =>
@@ -1311,9 +1311,9 @@ namespace Player
             pPlaylist.Controls.Add(pbNewPlaylist);
             pbNewPlaylist.Location = new Point(467, 214);
             pbNewPlaylist.Size = new Size(85, 85);
-            pbNewPlaylist.SizeMode = PictureBoxSizeMode.CenterImage;
             pbNewPlaylist.BackColor = Color.Transparent;
             pbNewPlaylist.Image = Resources.NewPlaylist;
+            pbNewPlaylist.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbNewPlaylist.MouseHover += (sender, args) =>
@@ -1376,9 +1376,9 @@ namespace Player
             pPlaylist.Controls.Add(pbHome);
             pbHome.Location = new Point(467, 303);
             pbHome.Size = new Size(85, 85);
-            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
             pbHome.BackColor = Color.Transparent;
             pbHome.Image = Resources.Home;
+            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbHome.MouseHover += (sender, args) =>
@@ -1584,9 +1584,9 @@ namespace Player
             pSearch.Controls.Add(pbBack);
             pbBack.Location = new Point(468, 28);
             pbBack.Size = new Size(85, 85);
-            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
             pbBack.BackColor = Color.Transparent;
             pbBack.Image = Resources.Back;
+            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbBack.MouseHover += (sender, args) =>
@@ -1618,9 +1618,9 @@ namespace Player
             pSearch.Controls.Add(pbPlayer);
             pbPlayer.Location = new Point(475, 114);
             pbPlayer.Size = new Size(85, 85);
-            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
             pbPlayer.Image = Resources.Player;
+            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbPlayer.MouseHover += (sender, args) =>
@@ -1646,9 +1646,9 @@ namespace Player
             pSearch.Controls.Add(pbLocation);
             pbLocation.Location = new Point(468, 216);
             pbLocation.Size = new Size(85, 85);
-            pbLocation.SizeMode = PictureBoxSizeMode.CenterImage;
             pbLocation.BackColor = Color.Transparent;
             pbLocation.Image = Resources.Location;
+            pbLocation.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbLocation.MouseHover += (sender, args) =>
@@ -1722,9 +1722,9 @@ namespace Player
             pSearch.Controls.Add(pbHome);
             pbHome.Location = new Point(468, 303);
             pbHome.Size = new Size(85, 85);
-            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
             pbHome.BackColor = Color.Transparent;
             pbHome.Image = Resources.Home;
+            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbHome.MouseHover += (sender, args) =>
@@ -2020,9 +2020,9 @@ namespace Player
             pPower.Controls.Add(pbPlayer);
             pbPlayer.Location = new Point(476, 204);
             pbPlayer.Size = new Size(85, 85);
-            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
             pbPlayer.BackColor = Color.Transparent;
             pbPlayer.Image = Resources.Player;
+            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbPlayer.MouseHover += (sender, args) =>
@@ -2048,9 +2048,9 @@ namespace Player
             pPower.Controls.Add(pbHome);
             pbHome.Location = new Point(469, 303);
             pbHome.Size = new Size(85, 85);
-            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
             pbHome.BackColor = Color.Transparent;
             pbHome.Image = Resources.Home;
+            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
 
             // Zoom-in
             pbHome.MouseHover += (sender, args) =>
