@@ -73,21 +73,15 @@ namespace Player
             
             // Kiểm tra và tạo thư mục chứa các file playlist *.txt
             if (!Directory.Exists(@"Playlist"))
-            {
                 Directory.CreateDirectory(@"Playlist");
-            }
 
             // Kiểm tra và tạo file Location.txt
             if (!File.Exists(@"Location.txt"))
-            {
                 File.Create(@"Location.txt");
-            }
 
             // Kiểm tra và tạo file Karaoke.txt
             if (!File.Exists(@"Karaoke.txt"))
-            {
                 File.Create(@"Karaoke.txt");
-            }
         }
 
 
