@@ -14,9 +14,9 @@ namespace Player
 
         // 5 panel Listen, Karaoke, Playlist, Search, Power
         Panel pListen = new Panel();
-        Panel pKaraoke = new Panel();
         Panel pPlaylist = new Panel();
         Panel pSearch = new Panel();
+        Panel pKaraoke = new Panel();
         Panel pPower = new Panel();
 
 
@@ -186,7 +186,7 @@ namespace Player
 /***************************************************************************************/
 
 
-        // Zoom-in 4 nút Listen, Playlist, Search, Power
+        // Zoom-in 5 nút Listen, Playlist, Search, Karaoke, Power
         private void pbListen_MouseHover(object sender, EventArgs e)
         {
             obj.mouseHover(Resources.Listen, pbListen, "Listen");
@@ -220,7 +220,7 @@ namespace Player
 /***************************************************************************************/
 
 
-        // Zoom-out 4 nút Listen, Playlist, Search, Power
+        // Zoom-out 5 nút Listen, Playlist, Search, Karaoke, Power
         private void pbListen_MouseLeave(object sender, EventArgs e)
         {
             obj.mouseLeave(Resources.Listen, pbListen);

@@ -66,11 +66,11 @@
             // 
             this.pbKaraoke.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.pbKaraoke.BackColor = System.Drawing.Color.Transparent;
-            this.pbKaraoke.Image = ((System.Drawing.Image)(resources.GetObject("pbKaraoke.Image")));
+            this.pbKaraoke.Image = global::Player.Properties.Resources.Karaoke;
             this.pbKaraoke.InitialImage = null;
-            this.pbKaraoke.Location = new System.Drawing.Point(162, 316);
+            this.pbKaraoke.Location = new System.Drawing.Point(483, 311);
             this.pbKaraoke.Name = "pbKaraoke";
-            this.pbKaraoke.Size = new System.Drawing.Size(160, 160);
+            this.pbKaraoke.Size = new System.Drawing.Size(135, 135);
             this.pbKaraoke.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbKaraoke.TabIndex = 5;
             this.pbKaraoke.TabStop = false;
@@ -84,7 +84,7 @@
             this.pbListen.BackColor = System.Drawing.Color.Transparent;
             this.pbListen.Image = global::Player.Properties.Resources.Listen;
             this.pbListen.InitialImage = null;
-            this.pbListen.Location = new System.Drawing.Point(20, 321);
+            this.pbListen.Location = new System.Drawing.Point(24, 318);
             this.pbListen.Name = "pbListen";
             this.pbListen.Size = new System.Drawing.Size(135, 135);
             this.pbListen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -100,7 +100,7 @@
             this.pbPlaylist.BackColor = System.Drawing.Color.Transparent;
             this.pbPlaylist.Image = global::Player.Properties.Resources.Playlist;
             this.pbPlaylist.InitialImage = null;
-            this.pbPlaylist.Location = new System.Drawing.Point(354, 326);
+            this.pbPlaylist.Location = new System.Drawing.Point(195, 321);
             this.pbPlaylist.Name = "pbPlaylist";
             this.pbPlaylist.Size = new System.Drawing.Size(135, 135);
             this.pbPlaylist.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -116,7 +116,7 @@
             this.pbSearch.BackColor = System.Drawing.Color.Transparent;
             this.pbSearch.Image = global::Player.Properties.Resources.Search;
             this.pbSearch.InitialImage = null;
-            this.pbSearch.Location = new System.Drawing.Point(499, 323);
+            this.pbSearch.Location = new System.Drawing.Point(343, 317);
             this.pbSearch.Name = "pbSearch";
             this.pbSearch.Size = new System.Drawing.Size(135, 135);
             this.pbSearch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -132,7 +132,7 @@
             this.pbPower.BackColor = System.Drawing.Color.Transparent;
             this.pbPower.Image = ((System.Drawing.Image)(resources.GetObject("pbPower.Image")));
             this.pbPower.InitialImage = null;
-            this.pbPower.Location = new System.Drawing.Point(616, 318);
+            this.pbPower.Location = new System.Drawing.Point(615, 315);
             this.pbPower.Name = "pbPower";
             this.pbPower.Size = new System.Drawing.Size(135, 135);
             this.pbPower.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;

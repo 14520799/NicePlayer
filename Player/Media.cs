@@ -541,8 +541,8 @@ namespace Player
             // Khung Playing chứa danh sách phát hoặc lyric
             GroupBox gbPlaying = new GroupBox();
             pListen.Controls.Add(gbPlaying);
-            gbPlaying.Location = new Point(0, 12);
-            gbPlaying.Size = new Size(454, 397);
+            gbPlaying.Location = new Point(0, 15);
+            gbPlaying.Size = new Size(454, 394);
             gbPlaying.ForeColor = Color.DeepSkyBlue;
             gbPlaying.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbPlaying.Text = "My Music";
@@ -774,380 +774,6 @@ namespace Player
 /***************************************************************************************/
 
 
-        // Phương thức xử lý nút Karaoke ở giao diện chính
-        public void karaoke(Panel pKaraoke)
-        {
-            pKaraoke.BackColor = Color.Black;
-            string status = "Karaoke";  // Result hoặc Favorite
-            List<string> dirFavorite = new List<string>();  // Lưu Title + URL các video yêu thích
-
-            // Ô tìm kiếm
-            TextBox txtSearch = new TextBox();
-            pKaraoke.Controls.Add(txtSearch);
-            txtSearch.Location = new Point(18, 20);
-            txtSearch.Size = new Size(300, 28);
-            txtSearch.ForeColor = Color.Black;
-            txtSearch.Font = new Font("Times New Roman", 20, FontStyle.Regular, GraphicsUnit.Pixel);
-
-            // Icon tìm kiếm
-            PictureBox btnSearch = new PictureBox();
-            pKaraoke.Controls.Add(btnSearch);
-            btnSearch.Location = new Point(324, 21);
-            btnSearch.Size = new Size(28, 28);
-            btnSearch.BackColor = Color.Transparent;
-            btnSearch.Image = Resources.SearchButton;
-
-            // Khung chứa kết quả tìm kiếm từ YouTube
-            GroupBox gbKaraoke = new GroupBox();
-            pKaraoke.Controls.Add(gbKaraoke);
-            gbKaraoke.Location = new Point(0, 60);
-            gbKaraoke.Size = new Size(454, 349);
-            gbKaraoke.ForeColor = Color.DeepSkyBlue;
-            gbKaraoke.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
-            gbKaraoke.Text = "Karaoke";
-
-            AxShockwaveFlashObjects.AxShockwaveFlash flash = new AxShockwaveFlashObjects.AxShockwaveFlash();
-            gbKaraoke.Controls.Add(flash);
-            flash.Dock = DockStyle.Fill;
-            flash.AllowNetworking = "all";
-            flash.AllowFullScreen = "true";
-            flash.AllowScriptAccess = "always";
-            flash.BackgroundColor = 0;
-            flash.Visible = false;
-
-            ListView lvKaraoke = new ListView();
-            gbKaraoke.Controls.Add(lvKaraoke);
-            lvKaraoke.Dock = DockStyle.Fill;
-            lvKaraoke.View = View.Tile;
-            lvKaraoke.MultiSelect = false;
-            lvKaraoke.BackgroundImage = Resources.PlayingWall;
-            lvKaraoke.BackgroundImageTiled = true;
-            lvKaraoke.ForeColor = Color.Black;
-            lvKaraoke.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
-
-
-            // Nạp tất cả Title + URL đã lưu vào biến dirFavorite
-            try
-            {
-                // Đọc file Karaoke.txt
-                string line = string.Empty;
-                FileStream stream = new FileStream(@"Karaoke.txt", FileMode.Open);
-                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-
-                while ((line = reader.ReadLine()) != null)
-                {
-                    dirFavorite.Add(line);
-                }
-
-                reader.Close();
-                stream.Close();
-            }
-            catch
-            {
-
-            }
-
-
-            // Nhấn enter tìm kiếm
-            txtSearch.KeyDown += (sender, args) =>
-            {
-                if (args.KeyCode == Keys.Enter)
-                {
-                    HtmlWeb web = new HtmlWeb();
-                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-
-                    try
-                    {
-                        doc = web.Load("https://www.youtube.com/results?search_query=" + ("karaoke " + txtSearch.Text).Replace(" ", "+"));
-                    }
-                    catch
-                    {
-                        MessageBox.Show("There is no Internet connection", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-                    getURL(lvKaraoke, doc);  // Load Title lên lvKaraoke + Lưu URL vào biến urlYouTube
-                    gbKaraoke.Text = status = "Result";
-                    flash.Visible = false;
-                }
-            };
-
-
-            // Xử lý click chuột lên lvKaraoke
-            lvKaraoke.MouseClick += (sender, args) =>
-            {
-                if (args.Button == MouseButtons.Left)  // Click trái lên lvKaraoke
-                {
-                    if (gbKaraoke.Text == "Result")  // Nếu đang tìm kiếm
-                    {
-                        wmp.Ctlcontrols.stop();  // Stop wmp
-                        flash.Movie = urlYouTube[lvKaraoke.FocusedItem.Index];  // Phát title được chọn
-                        flash.Visible = true;
-                        gbKaraoke.Text = string.Empty;
-                    }
-                    else  // Nếu xem Favorite
-                    {
-                        foreach (string item in dirFavorite)
-                        {
-                            if (item == lvKaraoke.FocusedItem.Text)
-                            {
-                                wmp.Ctlcontrols.stop();  // Stop wmp
-                                flash.Movie = dirFavorite[dirFavorite.IndexOf(item) + 1];  // Phát title được chọn
-                                flash.Visible = true;
-                                gbKaraoke.Text = string.Empty;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else  // Click phải lên lvKaraoke
-                {
-                    if (gbKaraoke.Text == "Result")  // Nếu đang tìm kiếm
-                    {
-                        // Thêm ToolStripItem "Add to Favorite"
-                        ContextMenuStrip context = new ContextMenuStrip();
-                        ToolStripItem iFavorite = new ToolStripMenuItem("Add to Favorite");
-                        context.Items.Add(iFavorite);
-                        lvKaraoke.ContextMenuStrip = context;
-
-                        // Click "Add to Favorite"
-                        iFavorite.Click += (obj, evt) =>
-                        {
-                            bool available = false;  // Video cần thêm chưa tồn tại trong Favorite
-
-                            // Kiểm tra tồn tại
-                            foreach (string item in dirFavorite)
-                            {
-                                if (item == urlYouTube[lvKaraoke.FocusedItem.Index])
-                                {
-                                    available = true;
-                                    break;
-                                }
-                            }
-
-                            if (!available)  // Nếu chưa tồn tại
-                            {
-                                MessageBox.Show("Successfully !", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                File.AppendAllText(@"Karaoke.txt", lvKaraoke.FocusedItem.Text + Environment.NewLine + urlYouTube[lvKaraoke.FocusedItem.Index] + Environment.NewLine);
-                                dirFavorite.Add(lvKaraoke.FocusedItem.Text);
-                                dirFavorite.Add(urlYouTube[lvKaraoke.FocusedItem.Index]);
-                            }
-                            else  // Nếu đã tồn tại
-                                MessageBox.Show("The video already existed !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        };
-                    }
-                    else  // Nếu đang xem Favorite
-                    {
-                        // Thêm ToolStripItem "Delete"
-                        ContextMenuStrip context = new ContextMenuStrip();
-                        ToolStripItem iDelete = new ToolStripMenuItem("Delete");
-                        context.Items.Add(iDelete);
-                        lvKaraoke.ContextMenuStrip = context;
-
-                        // Click Delete
-                        iDelete.Click += (obj, evt) =>
-                        {
-                            // Xóa Title + URL cần xóa khỏi dirFavorite
-                            foreach (string item in dirFavorite)
-                            {
-                                if (item == lvKaraoke.FocusedItem.Text)
-                                {
-                                    dirFavorite.RemoveRange(dirFavorite.IndexOf(item), 2);
-                                    break;
-                                }
-                            }
-
-                            File.Delete(@"Karaoke.txt");  // Xóa file Karaoke.txt
-
-                            try
-                            {
-                                // Tạo mới file Karaoke.txt
-                                FileStream stream = new FileStream(@"Karaoke.txt", FileMode.CreateNew);
-                                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
-
-                                foreach (string item in dirFavorite)
-                                {
-                                    writer.WriteLine(item);  // Lưu các đường dẫn từ dirFavorite đã update
-                                }
-
-                                writer.Close();
-                                stream.Close();
-                            }
-                            catch
-                            {
-
-                            }
-
-                            lvKaraoke.Items.Remove(lvKaraoke.FocusedItem);  // Xóa tên video khỏi lvKaraoke
-                        };
-                    }
-                }
-            };
-
-
-            // Nút Back
-            PictureBox pbBack = new PictureBox();
-            pKaraoke.Controls.Add(pbBack);
-            pbBack.Location = new Point(466, 28);
-            pbBack.Size = new Size(85, 85);
-            pbBack.BackColor = Color.Transparent;
-            pbBack.Image = Resources.Back;
-            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
-
-            // Zoom-in
-            pbBack.MouseHover += (sender, args) =>
-            {
-                mouseHover(Resources.Back, pbBack, "Back");
-            };
-
-            // Zoom-out
-            pbBack.MouseLeave += (sender, args) =>
-            {
-                mouseLeave(Resources.Back, pbBack);
-            };
-
-            // Click nút Back
-            pbBack.Click += (sender, args) =>
-            {
-                // Nếu đang hiển thị player
-                if (flash.Visible)
-                    flash.Visible = false;
-                // Nếu đang xem Favorite
-                else if(gbKaraoke.Text == "Favorite" && txtSearch.Text.Trim() != string.Empty)
-                {
-                    HtmlWeb web = new HtmlWeb();
-                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-
-                    try
-                    {
-                        doc = web.Load("https://www.youtube.com/results?search_query=" + ("karaoke " + txtSearch.Text).Replace(" ", "+"));
-                    }
-                    catch
-                    {
-                        MessageBox.Show("There is no Internet connection", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-                    getURL(lvKaraoke, doc);
-                    gbKaraoke.Text = status = "Result";
-                }
-                else  // Nếu đang tìm kiếm
-                {
-                    pKaraoke.SendToBack();
-                    flash.Visible = false;
-                    flash.Movie = "Karaoke";
-                }
-                
-                gbKaraoke.Text = status;  // status = Result hoặc Favorite
-            };
-
-
-            // Nút Player
-            PictureBox pbPlayer = new PictureBox();
-            pKaraoke.Controls.Add(pbPlayer);
-            pbPlayer.Location = new Point(468, 123);
-            pbPlayer.Size = new Size(85, 85);
-            pbPlayer.BackColor = Color.Transparent;
-            pbPlayer.Image = Resources.YouTube;
-            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
-
-            // Zoom-in
-            pbPlayer.MouseHover += (sender, args) =>
-            {
-                mouseHover(Resources.YouTube, pbPlayer, "Player");
-            };
-
-            // Zoom-out
-            pbPlayer.MouseLeave += (sender, args) =>
-            {
-                mouseLeave(Resources.YouTube, pbPlayer);
-            };
-
-            // Click nút Player
-            pbPlayer.Click += (sender, args) =>
-            {
-                // Chỉ hiển thị player khi đang phát
-                if(flash.Movie != null && flash.Movie != "Karaoke")
-                {
-                    flash.Visible = true;
-                    gbKaraoke.Text = string.Empty;
-                }
-            };
-
-
-            // Nút Favorite
-            PictureBox pbFavorite = new PictureBox();
-            pKaraoke.Controls.Add(pbFavorite);
-            pbFavorite.Location = new Point(468, 217);
-            pbFavorite.Size = new Size(85, 85);
-            pbFavorite.BackColor = Color.Transparent;
-            pbFavorite.Image = Resources.Favorite;
-            pbFavorite.SizeMode = PictureBoxSizeMode.CenterImage;
-
-            // Zoom-in
-            pbFavorite.MouseHover += (sender, args) =>
-            {
-                mouseHover(Resources.Favorite, pbFavorite, "Favorite");
-            };
-
-            // Zoom-out
-            pbFavorite.MouseLeave += (sender, args) =>
-            {
-                mouseLeave(Resources.Favorite, pbFavorite);
-            };
-
-            // Click nút Favorite
-            pbFavorite.Click += (sender, args) =>
-            {
-                lvKaraoke.Clear();
-                flash.Visible = false;
-                gbKaraoke.Text = status = "Favorite";
-
-                int i = 0;
-
-                foreach (string item in dirFavorite)
-                {
-                    if (i % 2 == 0)  // i chẵn là Title + i lẻ là URL
-                        lvKaraoke.Items.Add(item);
-
-                    i++;
-                }
-            };
-
-
-            // Nút Home
-            PictureBox pbHome = new PictureBox();
-            pKaraoke.Controls.Add(pbHome);
-            pbHome.Location = new Point(468, 303);
-            pbHome.Size = new Size(85, 85);
-            pbHome.BackColor = Color.Transparent;
-            pbHome.Image = Resources.Home;
-            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
-
-            // Zoom-in
-            pbHome.MouseHover += (sender, args) =>
-            {
-                mouseHover(Resources.Home, pbHome, "Home");
-            };
-
-            // Zoom-out
-            pbHome.MouseLeave += (sender, args) =>
-            {
-                mouseLeave(Resources.Home, pbHome);
-            };
-
-            // Click nút Home
-            pbHome.Click += (sender, args) =>
-            {
-                pKaraoke.SendToBack();
-                flash.Visible = false;
-                flash.Movie = "Karaoke";  // Stop player tạm thời
-                gbKaraoke.Text = status;
-            };
-        }
-
-
-/***************************************************************************************/
-
-
         // Phương thức xử lý nút Playlist ở giao diện chính
         public void playlist(Panel pPlaylist)
         {
@@ -1157,8 +783,8 @@ namespace Player
             // Khung chứa danh sách các Playlist
             GroupBox gbPlaylist = new GroupBox();
             pPlaylist.Controls.Add(gbPlaylist);
-            gbPlaylist.Location = new Point(0, 12);
-            gbPlaylist.Size = new Size(160, 397);
+            gbPlaylist.Location = new Point(0, 15);
+            gbPlaylist.Size = new Size(160, 394);
             gbPlaylist.ForeColor = Color.DeepSkyBlue;
             gbPlaylist.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbPlaylist.Text = "Playlist";
@@ -1176,8 +802,8 @@ namespace Player
             // Khung chứa danh sách các media đang phát + Lyric
             GroupBox gbPlaying = new GroupBox();
             pPlaylist.Controls.Add(gbPlaying);
-            gbPlaying.Location = new Point(159, 12);
-            gbPlaying.Size = new Size(295, 397);
+            gbPlaying.Location = new Point(159, 15);
+            gbPlaying.Size = new Size(295, 394);
             gbPlaying.ForeColor = Color.DeepSkyBlue;
             gbPlaying.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbPlaying.Text = "My Music";
@@ -1494,7 +1120,7 @@ namespace Player
             lvSearch.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
 
             
-            try  // Load tất cả các thư mục mặc định chứa media lên lvLocation
+            try  // Load tất cả các thư mục chứa media lên lvLocation
             {
                 // Đọc file Location.txt
                 string line = string.Empty;
@@ -1768,6 +1394,380 @@ namespace Player
 
 /***************************************************************************************/
 
+        
+        // Phương thức xử lý nút Karaoke ở giao diện chính
+        public void karaoke(Panel pKaraoke)
+        {
+            pKaraoke.BackColor = Color.Black;
+            string status = "Karaoke";  // Result hoặc Favorite
+            List<string> dirFavorite = new List<string>();  // Lưu Title + URL các video yêu thích
+
+            // Ô tìm kiếm
+            TextBox txtSearch = new TextBox();
+            pKaraoke.Controls.Add(txtSearch);
+            txtSearch.Location = new Point(18, 20);
+            txtSearch.Size = new Size(300, 28);
+            txtSearch.ForeColor = Color.Black;
+            txtSearch.Font = new Font("Times New Roman", 20, FontStyle.Regular, GraphicsUnit.Pixel);
+
+            // Icon tìm kiếm
+            PictureBox btnSearch = new PictureBox();
+            pKaraoke.Controls.Add(btnSearch);
+            btnSearch.Location = new Point(324, 21);
+            btnSearch.Size = new Size(28, 28);
+            btnSearch.BackColor = Color.Transparent;
+            btnSearch.Image = Resources.SearchButton;
+
+            // Khung chứa kết quả tìm kiếm từ YouTube
+            GroupBox gbKaraoke = new GroupBox();
+            pKaraoke.Controls.Add(gbKaraoke);
+            gbKaraoke.Location = new Point(0, 60);
+            gbKaraoke.Size = new Size(454, 349);
+            gbKaraoke.ForeColor = Color.DeepSkyBlue;
+            gbKaraoke.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
+            gbKaraoke.Text = "Karaoke";
+
+            AxShockwaveFlashObjects.AxShockwaveFlash flash = new AxShockwaveFlashObjects.AxShockwaveFlash();
+            gbKaraoke.Controls.Add(flash);
+            flash.Dock = DockStyle.Fill;
+            flash.AllowNetworking = "all";
+            flash.AllowFullScreen = "true";
+            flash.AllowScriptAccess = "always";
+            flash.BackgroundColor = 0;
+            flash.Visible = false;
+
+            ListView lvKaraoke = new ListView();
+            gbKaraoke.Controls.Add(lvKaraoke);
+            lvKaraoke.Dock = DockStyle.Fill;
+            lvKaraoke.View = View.Tile;
+            lvKaraoke.MultiSelect = false;
+            lvKaraoke.BackgroundImage = Resources.PlayingWall;
+            lvKaraoke.BackgroundImageTiled = true;
+            lvKaraoke.ForeColor = Color.Black;
+            lvKaraoke.Font = new Font("Times New Roman", 21, FontStyle.Regular, GraphicsUnit.Pixel);
+
+
+            // Nạp tất cả Title + URL đã lưu vào biến dirFavorite
+            try
+            {
+                // Đọc file Karaoke.txt
+                string line = string.Empty;
+                FileStream stream = new FileStream(@"Karaoke.txt", FileMode.Open);
+                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    dirFavorite.Add(line);
+                }
+
+                reader.Close();
+                stream.Close();
+            }
+            catch
+            {
+
+            }
+
+
+            // Nhấn enter tìm kiếm
+            txtSearch.KeyDown += (sender, args) =>
+            {
+                if (args.KeyCode == Keys.Enter)
+                {
+                    HtmlWeb web = new HtmlWeb();
+                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+
+                    try
+                    {
+                        doc = web.Load("https://www.youtube.com/results?search_query=" + ("karaoke " + txtSearch.Text).Replace(" ", "+"));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("There is no Internet connection", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    getURL(lvKaraoke, doc);  // Load Title lên lvKaraoke + Lưu URL vào biến urlYouTube
+                    gbKaraoke.Text = status = "Result";
+                    flash.Visible = false;
+                }
+            };
+
+
+            // Xử lý click chuột lên lvKaraoke
+            lvKaraoke.MouseClick += (sender, args) =>
+            {
+                if (args.Button == MouseButtons.Left)  // Click trái lên lvKaraoke
+                {
+                    if (gbKaraoke.Text == "Result")  // Nếu đang tìm kiếm
+                    {
+                        wmp.Ctlcontrols.stop();  // Stop wmp
+                        flash.Movie = urlYouTube[lvKaraoke.FocusedItem.Index];  // Phát title được chọn
+                        flash.Visible = true;
+                        gbKaraoke.Text = string.Empty;
+                    }
+                    else  // Nếu xem Favorite
+                    {
+                        foreach (string item in dirFavorite)
+                        {
+                            if (item == lvKaraoke.FocusedItem.Text)
+                            {
+                                wmp.Ctlcontrols.stop();  // Stop wmp
+                                flash.Movie = dirFavorite[dirFavorite.IndexOf(item) + 1];  // Phát title được chọn
+                                flash.Visible = true;
+                                gbKaraoke.Text = string.Empty;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else  // Click phải lên lvKaraoke
+                {
+                    if (gbKaraoke.Text == "Result")  // Nếu đang tìm kiếm
+                    {
+                        // Thêm ToolStripItem "Add to Favorite"
+                        ContextMenuStrip context = new ContextMenuStrip();
+                        ToolStripItem iFavorite = new ToolStripMenuItem("Add to Favorite");
+                        context.Items.Add(iFavorite);
+                        lvKaraoke.ContextMenuStrip = context;
+
+                        // Click "Add to Favorite"
+                        iFavorite.Click += (obj, evt) =>
+                        {
+                            bool available = false;  // Video cần thêm chưa tồn tại trong Favorite
+
+                            // Kiểm tra tồn tại
+                            foreach (string item in dirFavorite)
+                            {
+                                if (item == urlYouTube[lvKaraoke.FocusedItem.Index])
+                                {
+                                    available = true;
+                                    break;
+                                }
+                            }
+
+                            if (!available)  // Nếu chưa tồn tại
+                            {
+                                MessageBox.Show("Successfully !", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                File.AppendAllText(@"Karaoke.txt", lvKaraoke.FocusedItem.Text + Environment.NewLine + urlYouTube[lvKaraoke.FocusedItem.Index] + Environment.NewLine);
+                                dirFavorite.Add(lvKaraoke.FocusedItem.Text);
+                                dirFavorite.Add(urlYouTube[lvKaraoke.FocusedItem.Index]);
+                            }
+                            else  // Nếu đã tồn tại
+                                MessageBox.Show("The video already existed !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        };
+                    }
+                    else  // Nếu đang xem Favorite
+                    {
+                        // Thêm ToolStripItem "Delete"
+                        ContextMenuStrip context = new ContextMenuStrip();
+                        ToolStripItem iDelete = new ToolStripMenuItem("Delete");
+                        context.Items.Add(iDelete);
+                        lvKaraoke.ContextMenuStrip = context;
+
+                        // Click Delete
+                        iDelete.Click += (obj, evt) =>
+                        {
+                            // Xóa Title + URL cần xóa khỏi dirFavorite
+                            foreach (string item in dirFavorite)
+                            {
+                                if (item == lvKaraoke.FocusedItem.Text)
+                                {
+                                    dirFavorite.RemoveRange(dirFavorite.IndexOf(item), 2);
+                                    break;
+                                }
+                            }
+
+                            File.Delete(@"Karaoke.txt");  // Xóa file Karaoke.txt
+
+                            try
+                            {
+                                // Tạo mới file Karaoke.txt
+                                FileStream stream = new FileStream(@"Karaoke.txt", FileMode.CreateNew);
+                                StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
+
+                                foreach (string item in dirFavorite)
+                                {
+                                    writer.WriteLine(item);  // Lưu các đường dẫn từ dirFavorite đã update
+                                }
+
+                                writer.Close();
+                                stream.Close();
+                            }
+                            catch
+                            {
+
+                            }
+
+                            lvKaraoke.Items.Remove(lvKaraoke.FocusedItem);  // Xóa tên video khỏi lvKaraoke
+                        };
+                    }
+                }
+            };
+
+
+            // Nút Back
+            PictureBox pbBack = new PictureBox();
+            pKaraoke.Controls.Add(pbBack);
+            pbBack.Location = new Point(466, 28);
+            pbBack.Size = new Size(85, 85);
+            pbBack.BackColor = Color.Transparent;
+            pbBack.Image = Resources.Back;
+            pbBack.SizeMode = PictureBoxSizeMode.CenterImage;
+
+            // Zoom-in
+            pbBack.MouseHover += (sender, args) =>
+            {
+                mouseHover(Resources.Back, pbBack, "Back");
+            };
+
+            // Zoom-out
+            pbBack.MouseLeave += (sender, args) =>
+            {
+                mouseLeave(Resources.Back, pbBack);
+            };
+
+            // Click nút Back
+            pbBack.Click += (sender, args) =>
+            {
+                // Nếu đang hiển thị player
+                if (flash.Visible)
+                    flash.Visible = false;
+                // Nếu đang xem Favorite
+                else if (gbKaraoke.Text == "Favorite" && txtSearch.Text.Trim() != string.Empty)
+                {
+                    HtmlWeb web = new HtmlWeb();
+                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+
+                    try
+                    {
+                        doc = web.Load("https://www.youtube.com/results?search_query=" + ("karaoke " + txtSearch.Text).Replace(" ", "+"));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("There is no Internet connection", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    getURL(lvKaraoke, doc);
+                    gbKaraoke.Text = status = "Result";
+                }
+                else  // Nếu đang tìm kiếm
+                {
+                    pKaraoke.SendToBack();
+                    flash.Visible = false;
+                    flash.Movie = "Karaoke";
+                }
+
+                gbKaraoke.Text = status;  // status = Result hoặc Favorite
+            };
+
+
+            // Nút Player
+            PictureBox pbPlayer = new PictureBox();
+            pKaraoke.Controls.Add(pbPlayer);
+            pbPlayer.Location = new Point(468, 123);
+            pbPlayer.Size = new Size(85, 85);
+            pbPlayer.BackColor = Color.Transparent;
+            pbPlayer.Image = Resources.YouTube;
+            pbPlayer.SizeMode = PictureBoxSizeMode.CenterImage;
+
+            // Zoom-in
+            pbPlayer.MouseHover += (sender, args) =>
+            {
+                mouseHover(Resources.YouTube, pbPlayer, "Player");
+            };
+
+            // Zoom-out
+            pbPlayer.MouseLeave += (sender, args) =>
+            {
+                mouseLeave(Resources.YouTube, pbPlayer);
+            };
+
+            // Click nút Player
+            pbPlayer.Click += (sender, args) =>
+            {
+                // Chỉ hiển thị player khi đang phát
+                if (flash.Movie != null && flash.Movie != "Karaoke")
+                {
+                    flash.Visible = true;
+                    gbKaraoke.Text = string.Empty;
+                }
+            };
+
+
+            // Nút Favorite
+            PictureBox pbFavorite = new PictureBox();
+            pKaraoke.Controls.Add(pbFavorite);
+            pbFavorite.Location = new Point(468, 217);
+            pbFavorite.Size = new Size(85, 85);
+            pbFavorite.BackColor = Color.Transparent;
+            pbFavorite.Image = Resources.Favorite;
+            pbFavorite.SizeMode = PictureBoxSizeMode.CenterImage;
+
+            // Zoom-in
+            pbFavorite.MouseHover += (sender, args) =>
+            {
+                mouseHover(Resources.Favorite, pbFavorite, "Favorite");
+            };
+
+            // Zoom-out
+            pbFavorite.MouseLeave += (sender, args) =>
+            {
+                mouseLeave(Resources.Favorite, pbFavorite);
+            };
+
+            // Click nút Favorite
+            pbFavorite.Click += (sender, args) =>
+            {
+                lvKaraoke.Clear();
+                flash.Visible = false;
+                gbKaraoke.Text = status = "Favorite";
+
+                int i = 0;
+
+                foreach (string item in dirFavorite)
+                {
+                    if (i % 2 == 0)  // i chẵn là Title + i lẻ là URL
+                        lvKaraoke.Items.Add(item);
+
+                    i++;
+                }
+            };
+
+
+            // Nút Home
+            PictureBox pbHome = new PictureBox();
+            pKaraoke.Controls.Add(pbHome);
+            pbHome.Location = new Point(468, 303);
+            pbHome.Size = new Size(85, 85);
+            pbHome.BackColor = Color.Transparent;
+            pbHome.Image = Resources.Home;
+            pbHome.SizeMode = PictureBoxSizeMode.CenterImage;
+
+            // Zoom-in
+            pbHome.MouseHover += (sender, args) =>
+            {
+                mouseHover(Resources.Home, pbHome, "Home");
+            };
+
+            // Zoom-out
+            pbHome.MouseLeave += (sender, args) =>
+            {
+                mouseLeave(Resources.Home, pbHome);
+            };
+
+            // Click nút Home
+            pbHome.Click += (sender, args) =>
+            {
+                pKaraoke.SendToBack();
+                flash.Visible = false;
+                flash.Movie = "Karaoke";  // Stop player tạm thời
+                gbKaraoke.Text = status;
+            };
+        }
+
+
+/***************************************************************************************/
+
 
         public void power(Form form, Panel pPower)
         {
@@ -1780,9 +1780,9 @@ namespace Player
             // Khung Timer
             GroupBox gbTimer = new GroupBox();
             pPower.Controls.Add(gbTimer);
-            gbTimer.Location = new Point(0, 12);
-            gbTimer.Size = new Size(455, 397);
-            gbTimer.ForeColor = Color.Lime;
+            gbTimer.Location = new Point(0, 15);
+            gbTimer.Size = new Size(455, 394);
+            gbTimer.ForeColor = Color.DeepSkyBlue;
             gbTimer.Font = new Font("Times New Roman", 21, FontStyle.Bold, GraphicsUnit.Pixel);
             gbTimer.Text = "Music Timer";
 
@@ -1791,7 +1791,7 @@ namespace Player
             gbTimer.Controls.Add(lblTitle);
             lblTitle.Location = new Point(119, 46);
             lblTitle.Width = 250;
-            lblTitle.ForeColor = Color.DeepSkyBlue;
+            lblTitle.ForeColor = Color.Lime;
             lblTitle.Font = new Font("Lucida Bright", 24, FontStyle.Bold, GraphicsUnit.Pixel);
             lblTitle.Text = "Select Your Timer";
 
@@ -1967,14 +1967,14 @@ namespace Player
                 btnResume.Enabled = false;
             };
 
-            //Click nút Cancel
+            // Click nút Cancel
             btnCancel.Click += (sender, args) =>
             {
-                timer.Stop();
+                lblRemain.Text = "Canceled !";
                 btnPause.Enabled = false;
                 btnResume.Enabled = false;
                 btnCancel.Enabled = false;
-                lblRemain.Text = "Canceled !";
+                timer.Stop();
             };
 
 
