@@ -11,7 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-
 namespace Player
 {
     public class Media
@@ -26,7 +25,7 @@ namespace Player
         
         string dirPlaylist = string.Empty;  // Lưu tên playlist đang phát
         List<string> dirMedia = new List<string>();  // Lưu danh sách đường dẫn các media đang phát
-        List<string> urlYouTube = new List<string>();  // Lưu danh sách URL từ YouTube (Dùng cho Karaoke)
+        List<string> urlYouTube = new List<string>();  // Lưu danh sách URL từ YouTube => Dùng cho Karaoke
         List<string> dirLocation = new List<string>();  // Lưu danh sách đường dẫn các thư mục chứa media
         
         bool found = false;  // Kết quả tìm kiếm media
@@ -276,22 +275,28 @@ namespace Player
             
             if (type == "Now Playing")  // Xử lý click phải cho lvPlaying
             {
-                try
-                {
-                    // Thêm tất cả tên playlist vào iAddTo
-                    foreach (string item in Directory.GetFiles(@"Playlist", "*.txt"))
-                    {
-                        iAddTo.DropDownItems.Add(new ToolStripMenuItem(Path.GetFileNameWithoutExtension(item)));
-                    }
-                }
-                catch
-                {
+                // Thêm 4 ToolStripItem : Lyric, Delete, Add to, Property
+                context.Items.AddRange(new ToolStripItem[] { iLyric, iDelete });
 
+                if(Directory.GetFiles(@"Playlist", "*.txt").Count() > 0)
+                {
+                    try
+                    {
+                        // Thêm tất cả tên playlist vào iAddTo
+                        foreach (string item in Directory.GetFiles(@"Playlist", "*.txt"))
+                        {
+                            iAddTo.DropDownItems.Add(new ToolStripMenuItem(Path.GetFileNameWithoutExtension(item)));
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+
+                    context.Items.Add(iAddTo);
                 }
                 
-
-                // Thêm 4 ToolStripItem : Lyric, Delete, Add to, Property
-                context.Items.AddRange(new ToolStripItem[] { iLyric, iDelete, iAddTo, iProperty });
+                context.Items.Add(iProperty);
 
 
                 // Chỉ hiển thị ContextMenuStrip khi listView.SelectedItems.Count != 0
@@ -602,7 +607,7 @@ namespace Player
 
                 }
                 
-                wmp.currentPlaylist = playlist;  // Phát
+                wmp.currentPlaylist = playlist;  // Phát playlist
             }
             else if(itemClicked != string.Empty)  // Hiển thị bài hát được click trong khung Search
             {

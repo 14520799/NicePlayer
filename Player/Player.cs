@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-
 namespace Player
 {
     public partial class Player : Form
