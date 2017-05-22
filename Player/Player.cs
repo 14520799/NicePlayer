@@ -12,7 +12,7 @@ namespace Player
         Media obj = new Media();
         AxWMPLib.AxWindowsMediaPlayer wmp = new AxWMPLib.AxWindowsMediaPlayer();
 
-        // 5 panel Listen, Karaoke, Playlist, Search, Power
+        // 5 panel Listen, Playlist, Search, Karaoke, Power
         Panel pListen = new Panel();
         Panel pPlaylist = new Panel();
         Panel pSearch = new Panel();
@@ -22,7 +22,7 @@ namespace Player
 
 /***************************************************************************************/
 
-
+        
         public Player()
         {
             // Giải quyết nháy hình
