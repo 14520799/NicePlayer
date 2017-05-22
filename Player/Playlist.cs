@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
 
-
 namespace Player
 {
     public partial class Playlist : Form
     {
         string message = string.Empty;  // Biến lưu trữ tên playlist
-        
+
         public Playlist()
         {
             InitializeComponent();

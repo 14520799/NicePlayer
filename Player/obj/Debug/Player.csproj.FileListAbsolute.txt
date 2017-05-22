@@ -25,6 +25,7 @@ C:\Users\Admin\Source\Repos\phanhoangtam\Player\bin\Debug\Interop.ShockwaveFlash
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\bin\Debug\Interop.WMPLib.dll
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\bin\Debug\AxInterop.WMPLib.dll
+C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Interop.ShockwaveFlashObjects.dll
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\Interop.WMPLib.dll
 C:\Users\Admin\Source\Repos\phanhoangtam\Player\obj\Debug\AxInterop.ShockwaveFlashObjects.dll
