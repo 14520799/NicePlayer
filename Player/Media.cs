@@ -2004,6 +2004,7 @@ namespace Player
                 // Nhắc nhở shutdown trước 5 phút
                 if(time - 300 == -1 && type == "Shutdown")
                 {
+                    form.TopMost = true;
                     DialogResult dialog = MessageBox.Show("Shutdown after 5 minutes\nAre you sure ?", string.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     
                     if (dialog == DialogResult.No)
@@ -2013,9 +2014,9 @@ namespace Player
                         btnResume.Enabled = false;
                         btnCancel.Enabled = false;
                         timer.Stop();
-                    }
+                    }  // Nếu không chọn Yes/No => PC sẽ shutdown sau 5 phút
 
-                    // Nếu không chọn Yes/No => PC sẽ shutdown sau 5 phút
+                    form.TopMost = false;
                 }
 
                 // Hết giờ
