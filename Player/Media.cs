@@ -638,7 +638,7 @@ namespace Player
             // Nút Back
             PictureBox pbBack = new PictureBox();
             pListen.Controls.Add(pbBack);
-            pbBack.Location = new Point(468, 28);
+            pbBack.Location = new Point(467, 28);
             pbBack.Size = new Size(85, 85);
             pbBack.BackColor = Color.Transparent;
             pbBack.Image = Resources.Back;
@@ -672,7 +672,7 @@ namespace Player
             // Nút Player
             PictureBox pbPlayer = new PictureBox();
             pListen.Controls.Add(pbPlayer);
-            pbPlayer.Location = new Point(475, 111);
+            pbPlayer.Location = new Point(474, 110);
             pbPlayer.Size = new Size(85, 85);
             pbPlayer.BackColor = Color.Transparent;
             pbPlayer.Image = Resources.Player;
@@ -700,7 +700,7 @@ namespace Player
             // Nút Open
             PictureBox pbOpen = new PictureBox();
             pListen.Controls.Add(pbOpen);
-            pbOpen.Location = new Point(466, 212);
+            pbOpen.Location = new Point(465, 212);
             pbOpen.Size = new Size(85, 85);
             pbOpen.BackColor = Color.Transparent;
             pbOpen.Image = Resources.Open;
@@ -750,7 +750,7 @@ namespace Player
             // Nút Home
             PictureBox pbHome = new PictureBox();
             pListen.Controls.Add(pbHome);
-            pbHome.Location = new Point(468, 303);
+            pbHome.Location = new Point(467, 303);
             pbHome.Size = new Size(85, 85);
             pbHome.BackColor = Color.Transparent;
             pbHome.Image = Resources.Home;
