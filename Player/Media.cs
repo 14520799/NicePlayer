@@ -2077,7 +2077,7 @@ namespace Player
             // Nút Home
             PictureBox pbHome = new PictureBox();
             pPower.Controls.Add(pbHome);
-            pbHome.Location = new Point(469, 303);
+            pbHome.Location = new Point(468, 303);
             pbHome.Size = new Size(85, 85);
             pbHome.BackColor = Color.Transparent;
             pbHome.Image = Resources.Home;
