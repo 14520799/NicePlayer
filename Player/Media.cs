@@ -1702,7 +1702,7 @@ namespace Player
             // Nút Favorite
             PictureBox pbFavorite = new PictureBox();
             pKaraoke.Controls.Add(pbFavorite);
-            pbFavorite.Location = new Point(468, 217);
+            pbFavorite.Location = new Point(469, 217);
             pbFavorite.Size = new Size(85, 85);
             pbFavorite.BackColor = Color.Transparent;
             pbFavorite.Image = Resources.Favorite;
