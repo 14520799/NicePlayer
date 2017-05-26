@@ -57,3 +57,4 @@ C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.Properties.Resources.
 C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.csproj.GenerateResource.Cache
 C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.exe
 C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.pdb
+C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache
