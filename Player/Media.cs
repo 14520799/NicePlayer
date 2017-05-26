@@ -2004,8 +2004,8 @@ namespace Player
                 // Nhắc nhở shutdown trước 5 phút
                 if(time - 300 == -1 && type == "Shutdown")
                 {
+                    form.Activate();
                     form.WindowState = FormWindowState.Normal;
-                    form.BringToFront();
                     DialogResult dialog = MessageBox.Show("Shutdown after 5 minutes\nAre you sure ?", string.Empty, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     
                     if (dialog == DialogResult.No)
