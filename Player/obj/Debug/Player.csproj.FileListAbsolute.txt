@@ -46,6 +46,7 @@ C:\Users\Admin\GitHub\phanhoangtam\Player\bin\Debug\Interop.ShockwaveFlashObject
 C:\Users\Admin\GitHub\phanhoangtam\Player\bin\Debug\Interop.WMPLib.dll
 C:\Users\Admin\GitHub\phanhoangtam\Player\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
 C:\Users\Admin\GitHub\phanhoangtam\Player\bin\Debug\AxInterop.WMPLib.dll
+C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache
 C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Interop.ShockwaveFlashObjects.dll
 C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Interop.WMPLib.dll
 C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\AxInterop.ShockwaveFlashObjects.dll
@@ -57,4 +58,3 @@ C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.Properties.Resources.
 C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.csproj.GenerateResource.Cache
 C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.exe
 C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.pdb
-C:\Users\Admin\GitHub\phanhoangtam\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache
