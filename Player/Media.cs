@@ -28,7 +28,7 @@ namespace Player
         List<string> dirMedia = new List<string>();  // Danh sách đường dẫn các media đang phát
         List<string> urlYouTube = new List<string>();  // Danh sách URL từ YouTube => Dùng cho Karaoke
         List<string> dirLocation = new List<string>();  // Danh sách đường dẫn các thư mục chứa media
-        
+             
         bool found = false;  // Kết quả tìm kiếm media
         string itemClicked = string.Empty;  // Lấy tên media được click trong khung Search
 
