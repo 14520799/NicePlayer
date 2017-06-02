@@ -21,7 +21,7 @@ namespace Player
 
         [DllImport("user32")]
         public static extern bool ExitWindowsEx(uint flags, uint reason);
-        
+          
         public AxWMPLib.AxWindowsMediaPlayer wmp = new AxWMPLib.AxWindowsMediaPlayer();
         
         string dirPlaylist = string.Empty;  // Tên playlist đang phát
