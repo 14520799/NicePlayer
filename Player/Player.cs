@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Windows.Forms;
-
+using System.Xml;
 
 namespace Player
 {
@@ -164,32 +164,31 @@ namespace Player
         }
 
 
-/***************************************************************************************/
+        /***************************************************************************************/
 
 
         private void Player_Load(object sender, EventArgs e)
         {
-            // Kiểm tra và tạo thư mục chứa các file playlist *.txt
+            wmp.settings.volume = 100;  // Âm lượng tối đa
+
+            // Tạo thư mục chứa các file playlist *.txt
             if (!Directory.Exists(@"Playlist"))
                 Directory.CreateDirectory(@"Playlist");
 
-            // Kiểm tra và tạo file Location.txt
+            // Tạo file Location.txt
             if (!File.Exists(@"Location.txt"))
                 File.Create(@"Location.txt");
 
-            // Kiểm tra và tạo file Karaoke.txt
+            // Tạo file Karaoke.txt
             if (!File.Exists(@"Karaoke.txt"))
                 File.Create(@"Karaoke.txt");
 
-            // Kiểm tra và tạo file Log.txt => Lưu bài hát được chọn nghe
+            // Tạo file Log.txt => Lưu bài hát được chọn nghe
             if (!File.Exists(@"Log.txt"))
                 File.Create(@"Log.txt");
-            
-            // File Sent.txt là dấu hiệu cho biết đã gửi nhật ký người dùng hay chưa
-            if (DateTime.Now.Day == 1 || DateTime.Now.Day == 15)
-                File.Delete(@"Sent.txt");  // Xóa file Sent.txt để chuẩn bị gửi nhật ký người dùng
 
-            wmp.settings.volume = 100;
+            if (DateTime.Now.Day == 1 || DateTime.Now.Day == 15)
+                File.Delete(@"Sent.txt");
         }
 
 
@@ -329,16 +328,15 @@ namespace Player
                     smtp.EnableSsl = true;
                     smtp.Send(mail);
                     mail.Dispose();
+
+                    // Xóa file Log.txt + Tạo file Sent.txt lưu dữ liệu đã gửi
+                    File.Move(@"Log.txt", @"Sent.txt");
+                    File.AppendAllText(@"Sent.txt", Environment.NewLine + File.ReadAllText(@"Karaoke.txt"));
                 }
                 catch
                 {
-                    File.Delete(@"Log.txt");
-                    //File.Create(@"Sent.txt");
-                    //File.WriteAllText(@"Sent.txt", DateTime.Now.ToLongDateString());
+
                 }
-                
-                File.Move(@"Log.txt", @"Sent.txt");
-                File.AppendAllText(@"Sent.txt", File.ReadAllText(@"Karaoke.txt"));
             }
         }
     }
