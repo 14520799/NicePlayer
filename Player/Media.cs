@@ -220,6 +220,23 @@ namespace Player
                         }
                     }
                 }
+
+
+                // Lưu bài hát được chọn nghe vào file Log.txt
+                try
+                {
+                    FileStream stream = new FileStream(@"Log.txt", FileMode.Append);
+                    StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
+
+                    writer.WriteLine(listView.FocusedItem.Text);
+
+                    writer.Close();
+                    stream.Close();
+                }
+                catch
+                {
+
+                }
             }
             else if (type == "Playlist")  // Xử lý click trái cho lvPlaylist => Update dirMedia
             {

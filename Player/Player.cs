@@ -181,7 +181,7 @@ namespace Player
             if (!File.Exists(@"Karaoke.txt"))
                 File.Create(@"Karaoke.txt");
 
-            // Kiểm tra và tạo file Log.txt => Nhật ký thống kê bài hát được chọn nghe thường xuyên
+            // Kiểm tra và tạo file Log.txt => Lưu bài hát được chọn nghe
             if (!File.Exists(@"Log.txt"))
                 File.Create(@"Log.txt");
             
@@ -317,17 +317,28 @@ namespace Player
 
             if (!File.Exists(@"Sent.txt"))
             {
-                MailMessage mail = new MailMessage("niceplayer.log@gmail.com", "niceplayer.log@gmail.com");
-                mail.Subject = DateTime.Now.ToLongDateString();
-                mail.Body = Environment.UserName;
-                mail.Attachments.Add(new Attachment(@"Log.txt"));
-                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-                smtp.Credentials = new NetworkCredential("niceplayer.log@gmail.com", "14520799");
-                smtp.EnableSsl = true;
-                smtp.Send(mail);
-                //File.Delete(@"Log.txt");
-                //File.Create(@"Sent.txt");
-                //File.WriteAllText(@"Sent.txt", DateTime.Now.ToLongDateString());
+                try
+                {
+                    MailMessage mail = new MailMessage("niceplayer.log@gmail.com", "niceplayer.log@gmail.com");
+                    mail.Subject = DateTime.Now.ToLongDateString();
+                    mail.Body = Environment.UserName;
+                    mail.Attachments.Add(new Attachment(@"Log.txt"));
+                    mail.Attachments.Add(new Attachment(@"Karaoke.txt"));
+                    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                    smtp.Credentials = new NetworkCredential("niceplayer.log@gmail.com", "14520799");
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                    mail.Dispose();
+                }
+                catch
+                {
+                    File.Delete(@"Log.txt");
+                    //File.Create(@"Sent.txt");
+                    //File.WriteAllText(@"Sent.txt", DateTime.Now.ToLongDateString());
+                }
+                
+                File.Move(@"Log.txt", @"Sent.txt");
+                File.AppendAllText(@"Sent.txt", File.ReadAllText(@"Karaoke.txt"));
             }
         }
     }
