@@ -155,6 +155,7 @@
             this.Name = "Player";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = " Nice Player";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Player_FormClosed);
             this.Load += new System.EventHandler(this.Player_Load);
             this.pHome.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbKaraoke)).EndInit();

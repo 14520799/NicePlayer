@@ -2,6 +2,8 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Net;
+using System.Net.Mail;
 using System.Windows.Forms;
 
 
@@ -179,6 +181,14 @@ namespace Player
             if (!File.Exists(@"Karaoke.txt"))
                 File.Create(@"Karaoke.txt");
 
+            // Kiểm tra và tạo file Log.txt => Nhật ký thống kê bài hát được chọn nghe thường xuyên
+            if (!Directory.Exists(@"Log.txt"))
+                Directory.CreateDirectory(@"Log.txt");
+            
+            // File Sent.txt là dấu hiệu cho biết đã gửi nhật ký người dùng hay chưa
+            if (DateTime.Now.Day == 1 || DateTime.Now.Day == 15)
+                File.Delete(@"Sent.txt");  // Xóa file Sent.txt để chuẩn bị gửi nhật ký người dùng
+
             wmp.settings.volume = 100;
         }
 
@@ -297,6 +307,41 @@ namespace Player
             pPower.Dock = DockStyle.Fill;
             obj.power(this, pPower);
             pPower.BringToFront();
+        }
+
+
+        // Gửi nhật ký người dùng định kỳ trước khi đóng ứng dụng
+        private void Player_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.Hide();
+
+            if (!File.Exists(@"Sent.txt"))
+            {
+                Retry:
+                bool sent = false;
+                MailMessage message = new MailMessage("niceplayer.log@gmail.com", "niceplayer.log@gmail.com");
+                message.Subject = DateTime.Now.ToLongDateString() + " : " + Environment.UserName + "'s usage data";
+                message.Attachments.Add(new Attachment(@"Log.txt"));
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                smtp.Credentials = new NetworkCredential("niceplayer.log@gmail.com", "14520799");
+                smtp.EnableSsl = true;
+
+                try
+                {
+                    smtp.Send(message);
+                    File.Delete(@"Log.txt");
+                    File.Create(@"Sent.txt");
+                    File.WriteAllText(@"Sent.txt", DateTime.Now.ToLongDateString());
+                    sent = true;
+                }
+                catch
+                {
+
+                }
+
+                if (!sent)
+                    goto Retry;
+            }
         }
     }
 }

@@ -66,3 +66,11 @@ C:\Users\HOME\Source\Repos\phanhoangtam\Player\obj\Debug\AxInterop.WMPLib.dll
 C:\Users\HOME\Source\Repos\phanhoangtam\Player\obj\Debug\Player.csproj.ResolveComReference.cache
 C:\Users\HOME\Source\Repos\phanhoangtam\Player\obj\Debug\Player.exe
 C:\Users\HOME\Source\Repos\phanhoangtam\Player\obj\Debug\Player.pdb
+C:\Users\Admin\Desktop\phanhoangtam\Player\bin\Debug\Player.exe.config
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Interop.ShockwaveFlashObjects.dll
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Interop.WMPLib.dll
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\AxInterop.ShockwaveFlashObjects.dll
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\AxInterop.WMPLib.dll
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.csproj.ResolveComReference.cache
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.exe
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.pdb
