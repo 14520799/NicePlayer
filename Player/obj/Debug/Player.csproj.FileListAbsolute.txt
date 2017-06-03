@@ -74,3 +74,17 @@ C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\AxInterop.WMPLib.dll
 C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.csproj.ResolveComReference.cache
 C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.exe
 C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.pdb
+C:\Users\Admin\Desktop\phanhoangtam\Player\bin\Debug\Player.exe
+C:\Users\Admin\Desktop\phanhoangtam\Player\bin\Debug\Player.pdb
+C:\Users\Admin\Desktop\phanhoangtam\Player\bin\Debug\HtmlAgilityPack.dll
+C:\Users\Admin\Desktop\phanhoangtam\Player\bin\Debug\HtmlAgilityPack.pdb
+C:\Users\Admin\Desktop\phanhoangtam\Player\bin\Debug\HtmlAgilityPack.xml
+C:\Users\Admin\Desktop\phanhoangtam\Player\bin\Debug\Interop.ShockwaveFlashObjects.dll
+C:\Users\Admin\Desktop\phanhoangtam\Player\bin\Debug\Interop.WMPLib.dll
+C:\Users\Admin\Desktop\phanhoangtam\Player\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
+C:\Users\Admin\Desktop\phanhoangtam\Player\bin\Debug\AxInterop.WMPLib.dll
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.Player.resources
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.Playlist.resources
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.Properties.Resources.resources
+C:\Users\Admin\Desktop\phanhoangtam\Player\obj\Debug\Player.csproj.GenerateResource.Cache

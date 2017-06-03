@@ -182,8 +182,8 @@ namespace Player
                 File.Create(@"Karaoke.txt");
 
             // Kiểm tra và tạo file Log.txt => Nhật ký thống kê bài hát được chọn nghe thường xuyên
-            if (!Directory.Exists(@"Log.txt"))
-                Directory.CreateDirectory(@"Log.txt");
+            if (!File.Exists(@"Log.txt"))
+                File.Create(@"Log.txt");
             
             // File Sent.txt là dấu hiệu cho biết đã gửi nhật ký người dùng hay chưa
             if (DateTime.Now.Day == 1 || DateTime.Now.Day == 15)
@@ -317,30 +317,17 @@ namespace Player
 
             if (!File.Exists(@"Sent.txt"))
             {
-                Retry:
-                bool sent = false;
-                MailMessage message = new MailMessage("niceplayer.log@gmail.com", "niceplayer.log@gmail.com");
-                message.Subject = DateTime.Now.ToLongDateString() + " : " + Environment.UserName + "'s usage data";
-                message.Attachments.Add(new Attachment(@"Log.txt"));
+                MailMessage mail = new MailMessage("niceplayer.log@gmail.com", "niceplayer.log@gmail.com");
+                mail.Subject = DateTime.Now.ToLongDateString();
+                mail.Body = Environment.UserName;
+                mail.Attachments.Add(new Attachment(@"Log.txt"));
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
                 smtp.Credentials = new NetworkCredential("niceplayer.log@gmail.com", "14520799");
                 smtp.EnableSsl = true;
-
-                try
-                {
-                    smtp.Send(message);
-                    File.Delete(@"Log.txt");
-                    File.Create(@"Sent.txt");
-                    File.WriteAllText(@"Sent.txt", DateTime.Now.ToLongDateString());
-                    sent = true;
-                }
-                catch
-                {
-
-                }
-
-                if (!sent)
-                    goto Retry;
+                smtp.Send(mail);
+                //File.Delete(@"Log.txt");
+                //File.Create(@"Sent.txt");
+                //File.WriteAllText(@"Sent.txt", DateTime.Now.ToLongDateString());
             }
         }
     }
