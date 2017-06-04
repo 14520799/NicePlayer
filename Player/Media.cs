@@ -289,14 +289,21 @@ namespace Player
             ToolStripMenuItem iAddTo = new ToolStripMenuItem("Add To");
             ToolStripMenuItem iProperty = new ToolStripMenuItem("Property");
             ToolStripMenuItem iRename = new ToolStripMenuItem("Rename");
-            
-            
+
             if (type == "Now Playing")  // Xử lý click phải cho lvPlaying
             {
                 // Thêm 4 ToolStripItem : Lyric, Delete, Add to, Property
                 context.Items.AddRange(new ToolStripItem[] { iLyric, iDelete });
 
-                if(Directory.GetFiles(@"Playlist", "*.txt").Count() > 0)
+                string[] playlist = Directory.GetFiles(@"Playlist", "*.txt");
+
+                foreach(string item in playlist)
+                {
+                    if (Path.GetFileNameWithoutExtension(item) == string.Empty)
+                        File.Delete(item);  // Xóa file có tên rỗng
+                }
+
+                if (playlist.Count() > 0)  // Nếu tồn tại playlist
                 {
                     try
                     {
@@ -311,7 +318,8 @@ namespace Player
 
                     }
 
-                    context.Items.Add(iAddTo);
+                    if(iAddTo.DropDownItems.Count > 0)
+                        context.Items.Add(iAddTo);
                 }
                 
                 context.Items.Add(iProperty);

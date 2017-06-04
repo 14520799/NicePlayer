@@ -1,3 +1,0 @@
-# phanhoangtam
-# buihuyphuc
-# nguyentrungquan

@@ -169,7 +169,7 @@ namespace Player
 
         private void Player_Load(object sender, EventArgs e)
         {
-            wmp.settings.volume = 100;  // Âm lượng tối đa
+            wmp.settings.volume = 100;  // Set âm lượng tối đa
 
             // Tạo thư mục chứa các file playlist *.txt
             if (!Directory.Exists(@"Playlist"))
@@ -186,9 +186,6 @@ namespace Player
             // Tạo file Log.txt => Lưu bài hát được chọn nghe
             if (!File.Exists(@"Log.txt"))
                 File.Create(@"Log.txt");
-
-            if (DateTime.Now.Day == 1 || DateTime.Now.Day == 15)
-                File.Delete(@"Sent.txt");
         }
 
 
@@ -313,25 +310,23 @@ namespace Player
         private void Player_FormClosed(object sender, FormClosedEventArgs e)
         {
             this.Hide();
-
-            if (!File.Exists(@"Sent.txt"))
+            
+            if (File.GetCreationTime(@"Log.txt").Month < DateTime.Now.Month)
             {
                 try
                 {
-                    MailMessage mail = new MailMessage("niceplayer.log@gmail.com", "niceplayer.log@gmail.com");
-                    mail.Subject = DateTime.Now.ToLongDateString();
-                    mail.Body = Environment.UserName;
-                    mail.Attachments.Add(new Attachment(@"Log.txt"));
-                    mail.Attachments.Add(new Attachment(@"Karaoke.txt"));
+                    MailMessage mail = new MailMessage("niceplayer.log@gmail.com", "niceplayer.log@gmail.com");  // Gửi đến niceplayer.log@gmail.com
+                    mail.Subject = "Statistical Data";
+                    mail.Body = Environment.UserName;  // Tên người dùng
+                    mail.Attachments.Add(new Attachment(@"Log.txt"));  // Đính kèm file Log.txt
+                    mail.Attachments.Add(new Attachment(@"Karaoke.txt"));  // Đính kèm file Karaoke.txt
                     SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-                    smtp.Credentials = new NetworkCredential("niceplayer.log@gmail.com", "14520799");
+                    smtp.Credentials = new NetworkCredential("niceplayer.log@gmail.com", "14520799");  // Username + Password
                     smtp.EnableSsl = true;
                     smtp.Send(mail);
                     mail.Dispose();
-
-                    // Xóa file Log.txt + Tạo file Sent.txt lưu dữ liệu đã gửi
-                    File.Move(@"Log.txt", @"Sent.txt");
-                    File.AppendAllText(@"Sent.txt", Environment.NewLine + File.ReadAllText(@"Karaoke.txt"));
+                    
+                    File.Delete(@"Log.txt");  // Xóa file Log.txt => Sẽ tạo mới khi mở app lần sau
                 }
                 catch
                 {
