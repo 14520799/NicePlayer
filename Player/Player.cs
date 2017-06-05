@@ -311,7 +311,7 @@ namespace Player
         {
             this.Hide();
             
-            if (File.GetCreationTime(@"Log.txt").Month < DateTime.Now.Month)
+            if (File.GetCreationTime(@"Log.txt").Month < DateTime.Now.Month || (File.GetCreationTime(@"Log.txt").Month == 12 && DateTime.Now.Month == 1))
             {
                 try
                 {
