@@ -8,6 +8,7 @@ C:\Users\Admin\GitHub\NicePlayer\Player\bin\Debug\Interop.ShockwaveFlashObjects.
 C:\Users\Admin\GitHub\NicePlayer\Player\bin\Debug\Interop.WMPLib.dll
 C:\Users\Admin\GitHub\NicePlayer\Player\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
 C:\Users\Admin\GitHub\NicePlayer\Player\bin\Debug\AxInterop.WMPLib.dll
+C:\Users\Admin\GitHub\NicePlayer\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache
 C:\Users\Admin\GitHub\NicePlayer\Player\obj\Debug\Interop.ShockwaveFlashObjects.dll
 C:\Users\Admin\GitHub\NicePlayer\Player\obj\Debug\Interop.WMPLib.dll
 C:\Users\Admin\GitHub\NicePlayer\Player\obj\Debug\AxInterop.ShockwaveFlashObjects.dll
