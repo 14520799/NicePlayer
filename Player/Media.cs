@@ -495,10 +495,8 @@ namespace Player
                         {
                             // Nếu tên mới rỗng
                             if (evt.Label == string.Empty)
-                            {
-                                MessageBox.Show("Please enter a name !", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 evt.CancelEdit = true;
-                            }
+                            
                             // Nếu tên mới chưa có sẵn
                             else if (evt.Label != null && !Directory.GetFiles(@"Playlist", "*.txt").Contains(@"Playlist/" + evt.Label + ".txt"))
                             {
